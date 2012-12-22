@@ -1,0 +1,9 @@
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\bin\Debug\DentistOfficeForm.exe
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\bin\Debug\DentistOfficeForm.pdb
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\obj\x86\Debug\DentistOfficeForm.Properties.Resources.resources
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\obj\x86\Debug\DentistOfficeForm.exe
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\obj\x86\Debug\DentistOfficeForm.pdb
+c:\users\justin\documents\visual studio 2010\Projects\DentistOfficeForm\DentistOfficeForm\obj\x86\Debug\DentistOfficeForm.Form1.resources

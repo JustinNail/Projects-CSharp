@@ -1,0 +1,7 @@
+BEGIN
+read (a,c);
+WRITE (a - (1+c), 8, a, c);
+s_1 := a;
+s_2 := (a);
+s_3 := (a) - 10;
+END

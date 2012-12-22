@@ -1,0 +1,5 @@
+BEGIN
+a := a + 3
+read (b,d);
+write (a + (b-d));
+END

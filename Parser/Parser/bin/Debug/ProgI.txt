@@ -1,0 +1,8 @@
+BEGIN
+read (a, b, c, d);
+WRITE (a - (3 + b + c + d), 9, a, b, c, d);
+s_1 := (a) - 9;
+s_2 := (b) - 9;
+s_3 := (c) - 9;
+s_4 := (d) - 9;
+END

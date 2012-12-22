@@ -1,0 +1,20 @@
+﻿<Window x:Class="ValueConverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ValueConverter"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <local:FormatTelephoneNumber x:Key="FormatTelephoneNumber_key"/>
+        <local:BooleanToVisibilty x:Key="BooleanToVisibility_key"/>
+    </Window.Resources>
+    <StackPanel>
+        <StackPanel Name="telephone_number_stackpanel" Orientation="Horizontal">
+            <TextBlock Margin="5">Concord's Telephone Number is </TextBlock>
+            <TextBlock Margin="5"
+                       Text="{Binding TelephoneNumber,Converter={StaticResource FormatTelephoneNumber_key}}"
+                       Visibility="{Binding ElementName=display_checkbox, Path=IsChecked,
+                                    Converter={StaticResource BooleanToVisibility_key}}"/>
+        </StackPanel>
+        <CheckBox Name="display_checkbox" Margin="5">Display Telephone Number</CheckBox>
+    </StackPanel>
+</Window>

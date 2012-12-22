@@ -1,0 +1,5 @@
+BEGIN
+a := a + 7;
+read (g; h, i);
+write (a + (g-h));
+END

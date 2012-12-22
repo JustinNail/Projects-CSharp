@@ -1,0 +1,3 @@
+BEGIN
+y := 3 * x + i;
+END

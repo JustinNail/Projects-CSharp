@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<patients>
+  <patient patientid="1">
+    <firstname>Justin</firstname>
+    <lastname>Nail</lastname>
+    <age>22</age>
+    <homephone>304-555-5555</homephone>
+    <cellphone>304-999-9999</cellphone>
+    <email>justinnail@email.com</email>
+    <appointmentdate>01/15/2013</appointmentdate>
+    <appointmenttime>12:30</appointmenttime>
+    <appointmentnotes>Fillings</appointmentnotes>
+  </patient>
+  <patient patientid="2">
+    <firstname>Frank</firstname>
+    <lastname>Lukas</lastname>
+    <age>42</age>
+    <homephone>304-297-5987</homephone>
+    <cellphone>304-158-9543</cellphone>
+    <email>Lukas1970@aol.com</email>
+    <appointmentdate>05/30/2012</appointmentdate>
+    <appointmenttime>9:15</appointmenttime>
+    <appointmentnotes><![CDATA[Root Canal]]></appointmentnotes>
+  </patient>
+  <patient patientid="3">
+    <firstname>Jenny</firstname>
+    <lastname>Smith</lastname>
+    <age>30</age>
+    <homephone>304-582-2431</homephone>
+    <cellphone>304-730-4568</cellphone>
+    <email>JSmith22@gmail.com</email>
+    <appointmentdate>09/08/2012</appointmentdate>
+    <appointmenttime>15:00</appointmenttime>
+    <appointmentnotes><![CDATA[Check Up]]></appointmentnotes>
+  </patient>
+  <patient patientid="4">
+    <firstname>Rebecca</firstname>
+    <lastname>LaRiche</lastname>
+    <age>25</age>
+    <homephone>304-563-8101</homephone>
+    <cellphone>304-936-0146</cellphone>
+    <email>RebeccaL@aol.com</email>
+    <appointmentdate>06/10/2012</appointmentdate>
+    <appointmenttime>13:30</appointmenttime>
+    <appointmentnotes><![CDATA[Check Up]]></appointmentnotes>
+  </patient>
+  <patient patientid="5">
+    <firstname>Joseph</firstname>
+    <lastname>LaRiche</lastname>
+    <age>28</age>
+    <homephone>304-563-8101</homephone>
+    <cellphone>304-936-4924</cellphone>
+    <email>JoLaRiche@.com</email>
+    <appointmentdate>06/10/2012</appointmentdate>
+    <appointmenttime>14:00</appointmenttime>
+    <appointmentnotes><![CDATA[Check Up]]></appointmentnotes>
+  </patient>
+  <patient patientid="6">
+    <firstname>Susanne</firstname>
+    <lastname>Romano</lastname>
+    <age>67</age>
+    <homephone>304-875-1934</homephone>
+    <cellphone>304-970-3954</cellphone>
+    <email>SRomano@mail.com</email>
+    <appointmentdate>04/23/2012</appointmentdate>
+    <appointmenttime>8:30</appointmenttime>
+    <appointmentnotes><![CDATA[Denture Fitting]]></appointmentnotes>
+  </patient>
+</patients>

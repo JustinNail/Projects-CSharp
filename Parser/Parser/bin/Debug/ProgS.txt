@@ -1,0 +1,5 @@
+BEGIN
+a := a + 27;
+read (a;b;c;d;e;);
+write (a + (b-c+d+e));
+END

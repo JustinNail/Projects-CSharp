@@ -1,0 +1,15 @@
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\Content\Backgrounds\titlescreen.xnb
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\EyesOfTheDragon.exe
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\EyesOfTheDragon.pdb
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\RpgLibrary.dll
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\XRpgLibrary.dll
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\RpgLibrary.pdb
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\XRpgLibrary.pdb
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\obj\x86\Debug\EyesOfTheDragon.exe
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\obj\x86\Debug\EyesOfTheDragon.pdb
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\Content\Fonts\ControlFont.xnb
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\Content\GUI\leftarrowUp.xnb
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\Content\GUI\rightarrowUp.xnb
+C:\Users\Justin\documents\visual studio 2010\Projects\EyesOfTheDragon\EyesOfTheDragon\EyesOfTheDragon\bin\x86\Debug\Content\GUI\StopBar.xnb

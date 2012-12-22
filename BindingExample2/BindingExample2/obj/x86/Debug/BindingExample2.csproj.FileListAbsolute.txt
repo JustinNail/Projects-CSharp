@@ -1,0 +1,13 @@
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\bin\Debug\BindingExample2.exe
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\bin\Debug\BindingExample2.pdb
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\MainWindow.baml
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\MainWindow.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\App.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\BindingExample2_MarkupCompile.cache
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\BindingExample2.g.resources
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\BindingExample2.Properties.Resources.resources
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\BindingExample2.exe
+c:\users\justin\documents\visual studio 2010\Projects\BindingExample2\BindingExample2\obj\x86\Debug\BindingExample2.pdb

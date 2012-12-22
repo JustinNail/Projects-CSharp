@@ -1,0 +1,6 @@
+Content\Fonts\Requiem.xnb
+Content\Backgrounds\titlescreen.xnb
+Content\Backgrounds\Dark_Heresy_Splash.xnb
+Content\Backgrounds\Dark_Heresy_Title.xnb
+Content\Control Images\Button_Gold_Down.xnb
+Content\Control Images\Button_Gold_Up.xnb

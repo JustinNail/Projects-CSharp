@@ -1,0 +1,5 @@
+c:\users\justin\documents\visual studio 2010\Projects\DFAsimulator\DFAsimulator\bin\Release\DFAsimulator.exe
+c:\users\justin\documents\visual studio 2010\Projects\DFAsimulator\DFAsimulator\bin\Release\DFAsimulator.pdb
+c:\users\justin\documents\visual studio 2010\Projects\DFAsimulator\DFAsimulator\obj\x86\Release\ResolveAssemblyReference.cache
+c:\users\justin\documents\visual studio 2010\Projects\DFAsimulator\DFAsimulator\obj\x86\Release\DFAsimulator.exe
+c:\users\justin\documents\visual studio 2010\Projects\DFAsimulator\DFAsimulator\obj\x86\Release\DFAsimulator.pdb

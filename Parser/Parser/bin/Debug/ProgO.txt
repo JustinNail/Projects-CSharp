@@ -1,0 +1,5 @@
+BEGIN
+a : = &a + 8
+read (b, c, d, e);
+write (d + (e +c))
+END

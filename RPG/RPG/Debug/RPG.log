@@ -1,0 +1,35 @@
+﻿Build started 9/29/2011 9:43:14 AM.
+     1>Project "C:\Users\Justin\documents\visual studio 2010\Projects\RPG\RPG\RPG.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\RPG.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt spell.cpp
+         spell.cpp
+       Link:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Justin\documents\visual studio 2010\Projects\RPG\Debug\RPG.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\RPG.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Justin\documents\visual studio 2010\Projects\RPG\Debug\RPG.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Justin\documents\visual studio 2010\Projects\RPG\Debug\RPG.lib" /MACHINE:X86 Debug\caster.obj
+         Debug\cleric.obj
+         Debug\cleric_spells.obj
+         Debug\default_commands.obj
+         Debug\fighter.obj
+         Debug\monk.obj
+         Debug\monster.obj
+         Debug\ninja.obj
+         Debug\paladin.obj
+         Debug\rpg.obj
+         Debug\RPGclass.obj
+         Debug\spell.obj
+         Debug\thief.obj
+         Debug\wizard.obj
+         Debug\wizard_spells.obj
+         LINK : C:\Users\Justin\documents\visual studio 2010\Projects\RPG\Debug\RPG.exe not found or not built by the last incremental link; performing full link
+         RPG.vcxproj -> C:\Users\Justin\documents\visual studio 2010\Projects\RPG\Debug\RPG.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Justin\documents\visual studio 2010\Projects\RPG\Debug\RPG.exe;#1" /manifest Debug\RPG.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Debug\RPG.unsuccessfulbuild".
+         Touching "Debug\RPG.lastbuildstate".
+     1>Done Building Project "C:\Users\Justin\documents\visual studio 2010\Projects\RPG\RPG\RPG.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.65

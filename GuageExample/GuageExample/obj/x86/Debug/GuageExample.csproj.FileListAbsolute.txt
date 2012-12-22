@@ -1,0 +1,13 @@
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\bin\Debug\GuageExample.exe
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\bin\Debug\GuageExample.pdb
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\MainWindow.baml
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\MainWindow.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\App.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\GuageExample_MarkupCompile.cache
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\GuageExample.g.resources
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\GuageExample.Properties.Resources.resources
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\GuageExample.exe
+c:\users\justin\documents\visual studio 2010\Projects\GuageExample\GuageExample\obj\x86\Debug\GuageExample.pdb

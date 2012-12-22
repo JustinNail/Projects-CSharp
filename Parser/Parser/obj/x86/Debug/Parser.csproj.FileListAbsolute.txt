@@ -1,0 +1,5 @@
+c:\users\justin\documents\visual studio 2010\Projects\Parser\Parser\bin\Debug\Parser.exe
+c:\users\justin\documents\visual studio 2010\Projects\Parser\Parser\bin\Debug\Parser.pdb
+c:\users\justin\documents\visual studio 2010\Projects\Parser\Parser\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\justin\documents\visual studio 2010\Projects\Parser\Parser\obj\x86\Debug\Parser.exe
+c:\users\justin\documents\visual studio 2010\Projects\Parser\Parser\obj\x86\Debug\Parser.pdb

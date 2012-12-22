@@ -1,0 +1,73 @@
+﻿<Window x:Class="BindingtoProperty.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Loaded="Window_Loaded"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <TextBlock Margin="5">Select a customer</TextBlock>
+            <ComboBox Name="customer_combinationbox"
+                      SelectionChanged="customer_combinationbox_SelectionChanged"/>
+        </StackPanel>
+        <GroupBox Header="CustomerInformation"
+                      Grid.Column="1"
+                      VerticalAlignment="Center">
+                <StackPanel>
+                    <StackPanel Name="top_stackpanel">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">Last Name:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding LastName}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">First Name:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding FirstName}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">City:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding City}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">State:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding State}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">ZIP:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding ZIP}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <Rectangle Height="5"
+                               Fill="Black"/>
+                    
+                    <StackPanel Name="bottom_stackpanel">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">Last Name:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding LastName}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">First Name:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding FirstName}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">City:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding City}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">State:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding State}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5">ZIP:</TextBlock>
+                            <TextBlock Margin="5" Text="{Binding ZIP}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+    </Grid>
+</Window>

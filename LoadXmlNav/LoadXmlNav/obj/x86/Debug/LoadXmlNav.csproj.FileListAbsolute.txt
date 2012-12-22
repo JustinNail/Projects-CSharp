@@ -1,0 +1,9 @@
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\bin\Debug\LoadXmlNav.exe
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\bin\Debug\LoadXmlNav.pdb
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\obj\x86\Debug\LoadXmlNav.Form1.resources
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\obj\x86\Debug\LoadXmlNav.Properties.Resources.resources
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\obj\x86\Debug\LoadXmlNav.exe
+c:\users\justin\documents\visual studio 2010\Projects\LoadXmlNav\LoadXmlNav\obj\x86\Debug\LoadXmlNav.pdb

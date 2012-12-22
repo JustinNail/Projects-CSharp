@@ -1,0 +1,7 @@
+BEGIN
+read (a, b, c);
+WRITE (a - (2 + b + c), 6, a, b, c);
+s_1 := (a) - 6;
+s_2 := (b) - 6;
+s_3 := (c) - 6;
+END

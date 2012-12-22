@@ -1,0 +1,15 @@
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\MainWindow.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\App.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\DataTemplateExample_MarkupCompile.cache
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\DataTemplateExample_MarkupCompile.lref
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\DataTemplateExample.exe
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\DataTemplateExample.pdb
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\bin\Debug\DataTemplateExample.exe
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\bin\Debug\DataTemplateExample.pdb
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\MainWindow.baml
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\DataTemplateExample.g.resources
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\DataTemplateExample.Properties.Resources.resources
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\DataTemplateExample\DataTemplateExample\obj\x86\Debug\GenerateResource.write.1.tlog

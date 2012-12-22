@@ -1,0 +1,5 @@
+BEGIN
+a := a + - 2;
+read (e, f);
+write (a + (e-f));
+END

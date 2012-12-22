@@ -1,0 +1,3 @@
+BEGIN
+a := bb - 314 + a;
+END

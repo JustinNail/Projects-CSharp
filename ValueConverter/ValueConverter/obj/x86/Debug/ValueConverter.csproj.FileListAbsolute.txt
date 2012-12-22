@@ -1,0 +1,15 @@
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\App.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\ValueConverter_MarkupCompile.cache
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\bin\Debug\ValueConverter.exe
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\bin\Debug\ValueConverter.pdb
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\MainWindow.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\ValueConverter_MarkupCompile.lref
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\MainWindow.baml
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\ValueConverter.g.resources
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\ValueConverter.Properties.Resources.resources
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\ValueConverter.exe
+c:\users\justin\documents\visual studio 2010\Projects\ValueConverter\ValueConverter\obj\x86\Debug\ValueConverter.pdb

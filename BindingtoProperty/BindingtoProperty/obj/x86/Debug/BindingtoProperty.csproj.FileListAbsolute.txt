@@ -1,0 +1,13 @@
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\bin\Debug\BindingtoProperty.exe
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\bin\Debug\BindingtoProperty.pdb
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\MainWindow.baml
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\App.g.cs
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\BindingtoProperty_MarkupCompile.cache
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\BindingtoProperty.g.resources
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\BindingtoProperty.Properties.Resources.resources
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\BindingtoProperty.exe
+C:\Users\Justin\documents\visual studio 2010\Projects\BindingtoProperty\BindingtoProperty\obj\x86\Debug\BindingtoProperty.pdb

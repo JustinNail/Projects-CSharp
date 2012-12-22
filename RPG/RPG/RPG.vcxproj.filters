@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\class headers">
+      <UniqueIdentifier>{75168af8-0b39-4f67-8343-c14a754ae02a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\spell headers">
+      <UniqueIdentifier>{d408d3a1-9d0c-45e2-8c25-3656ba9879c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\class sources">
+      <UniqueIdentifier>{9080c1a6-9321-481e-bc4b-ff05b1118e73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\spell sources">
+      <UniqueIdentifier>{eb2de58f-98cb-433d-8a7e-4226aa9f0ea4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RPGclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rpg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="default_commands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cleric_spells.cpp">
+      <Filter>Source Files\spell sources</Filter>
+    </ClCompile>
+    <ClCompile Include="fighter.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+    <ClCompile Include="monster.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+    <ClCompile Include="spell.cpp">
+      <Filter>Source Files\spell sources</Filter>
+    </ClCompile>
+    <ClCompile Include="wizard_spells.cpp">
+      <Filter>Source Files\spell sources</Filter>
+    </ClCompile>
+    <ClCompile Include="thief.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+    <ClCompile Include="monk.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+    <ClCompile Include="caster.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+    <ClCompile Include="wizard.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+    <ClCompile Include="cleric.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+    <ClCompile Include="paladin.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ninja.cpp">
+      <Filter>Source Files\class sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RPGclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="default_commands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="classes.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="fighter.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="monster.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="spell.h">
+      <Filter>Header Files\spell headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cleric_spells.h">
+      <Filter>Header Files\spell headers</Filter>
+    </ClInclude>
+    <ClInclude Include="wizard_spells.h">
+      <Filter>Header Files\spell headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Thief.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="monk.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="caster.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="wizard.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cleric.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="paladin.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ninja.h">
+      <Filter>Header Files\class headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+</Project>

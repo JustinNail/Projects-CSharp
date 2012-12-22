@@ -1,0 +1,5 @@
+BEGIN
+a := a + - 7 + - 10;
+read (x, y, z);
+write (a + (x*y*z))
+END

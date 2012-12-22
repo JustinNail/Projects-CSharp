@@ -1,0 +1,9 @@
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\bin\Debug\LINQXMLExample.exe
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\bin\Debug\LINQXMLExample.pdb
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\obj\x86\Debug\LINQXMLExample.Form1.resources
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\obj\x86\Debug\LINQXMLExample.Properties.Resources.resources
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\obj\x86\Debug\LINQXMLExample.exe
+C:\Users\Justin\documents\visual studio 2010\Projects\LINQXMLExample\LINQXMLExample\obj\x86\Debug\LINQXMLExample.pdb

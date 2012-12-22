@@ -1,0 +1,9 @@
+BEGIN
+read (a, b, c, d, e);
+WRITE (a - (5 + b + c + d + e), 2, a, b, c, d, e);
+s_1 := (a) - 2;
+s_2 := (b) - 2;
+s_3 := (c) - 2;
+s_4 := (d) - 2;
+s_5 := (e) - 2;
+END
