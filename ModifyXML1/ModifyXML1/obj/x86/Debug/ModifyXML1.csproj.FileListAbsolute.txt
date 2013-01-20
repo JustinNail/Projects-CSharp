@@ -1,9 +1,0 @@
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\bin\Debug\ModifyXML1.exe
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\bin\Debug\ModifyXML1.pdb
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\obj\x86\Debug\ModifyXML1.Form1.resources
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\obj\x86\Debug\ModifyXML1.Properties.Resources.resources
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\obj\x86\Debug\GenerateResource.read.1.tlog
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\obj\x86\Debug\GenerateResource.write.1.tlog
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\obj\x86\Debug\ModifyXML1.exe
-C:\Users\Justin\documents\visual studio 2010\Projects\ModifyXML1\ModifyXML1\obj\x86\Debug\ModifyXML1.pdb

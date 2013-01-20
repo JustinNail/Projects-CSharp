@@ -1,5 +1,0 @@
-c:\users\justin\documents\visual studio 2010\Projects\reflectionExample\reflectionExample\obj\x86\Debug\ResolveAssemblyReference.cache
-c:\users\justin\documents\visual studio 2010\Projects\reflectionExample\reflectionExample\bin\Debug\reflectionExample.exe
-c:\users\justin\documents\visual studio 2010\Projects\reflectionExample\reflectionExample\bin\Debug\reflectionExample.pdb
-c:\users\justin\documents\visual studio 2010\Projects\reflectionExample\reflectionExample\obj\x86\Debug\reflectionExample.exe
-c:\users\justin\documents\visual studio 2010\Projects\reflectionExample\reflectionExample\obj\x86\Debug\reflectionExample.pdb
