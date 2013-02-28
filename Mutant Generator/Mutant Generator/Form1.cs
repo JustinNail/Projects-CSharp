@@ -97,7 +97,7 @@ namespace Dark_Heresy_Generator
 			//select every origin
 			var names = from name in Names.Element("root").Elements()
 						where (string)(name.Attribute("type").Value) ==
-								(string)(Sex_Box.Text)
+								(string)(DHCharacter.Sex)
 						select name;
 			names = from name in names.Elements()
 						select name;
@@ -1186,6 +1186,16 @@ namespace Dark_Heresy_Generator
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
 				Corruption_Roll(num, size, Base);
+				if (points.Attributes().Count() > 3)
+				{
+					var query = from mal in points.Attributes()
+								where mal.Name == "mal"
+								select mal.Value;
+					if (query.ElementAt(0) == "true")
+					{
+						Malignancy();
+					}
+				}
 			}
 		}
 
@@ -1357,6 +1367,16 @@ namespace Dark_Heresy_Generator
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
 				Corruption_Roll(num, size, Base);
+				if (points.Attributes().Count() > 3)
+				{
+					var query = from mal in points.Attributes()
+								where mal.Name == "mal"
+								select mal.Value;
+					if (query.ElementAt(0) == "true")
+					{
+						Malignancy();
+					}
+				}
 			}
 		}
 
@@ -1572,6 +1592,16 @@ namespace Dark_Heresy_Generator
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
 				Corruption_Roll(num, size, Base);
+				if (points.Attributes().Count() > 3)
+				{
+					var query = from mal in points.Attributes()
+								where mal.Name == "mal"
+								select mal.Value;
+					if (query.ElementAt(0) == "true")
+					{
+						Malignancy();
+					}
+				}
 			}
 		}
 		#endregion
@@ -1964,6 +1994,141 @@ namespace Dark_Heresy_Generator
 				DHCharacter.Talents.Add(new Talent("Psy Rating 2", Source));
 			}
 			CharacterUpdate();
+		}
+		private void Malignancy()
+		{
+			int result = Dice.Next(1,101);
+			
+			if(result >= 1 && result <= 10)
+			{
+				DHCharacter.Traits.Add(new Trait("Palsy",
+					"The character suffers from numerous minor tics, shakes and tremors with no"+
+					" medical cause. Reduce his Agility by 1d10.",""));
+				DHCharacter.Ag.Base -= Dice.Next(1, 11);
+			}
+			else if(result >= 11 && result <= 15)
+			{
+				DHCharacter.Traits.Add(new Trait("Dark-hearted",
+					"The character grows increasingly cruel, callous and vindictive. Reduce his "+
+					"Fellowship by 1d10.",""));
+				DHCharacter.Int.Base -= Dice.Next(1, 11);
+			}
+			else if(result >= 16 && result <= 20)
+			{
+				DHCharacter.Traits.Add(new Trait("Ill-fortuned",
+					"Whenever the character uses a Fate Point roll a d10. On a score of 7, 8, 9 or 10"+
+					" it has no effect but it is lost anyway.",""));
+			}
+			else if(result >= 21 && result <= 22)
+			{
+				DHCharacter.Traits.Add(new Trait("Skin Afflictions",
+					"The character is plagued by boils, scabs, weeping sores and the like. He takes "+
+					"a –20 penalty to all Charm Tests.",""));
+			}
+			else if(result >= 23 && result <= 25)
+			{
+				DHCharacter.Traits.Add(new Trait("Night Eyes",
+					"Light pains the character, and unless he shields his eyes, he suffers a –10 "+
+					"penalty on all Tests when in an area of bright light.",""));
+			}
+			else if(result >= 26 && result <= 30)
+			{
+				DHCharacter.Traits.Add(new Trait("Morbid",
+					"The character finds it hard to concentrate as his mind is filled with macabre"+
+					" visions and tortured, gloom-filled trains of thought. The character’s "+
+					"Intelligence is reduced by 1d10.",""));
+				DHCharacter.Int.Base -= Dice.Next(1, 11);
+			}
+			else if(result >= 31 && result <= 33)
+			{
+				DHCharacter.Traits.Add(new Trait("Witch-mark",
+					"The character develops some minor physical deformity or easily concealable"+
+					" mutation. It is small, but perhaps enough to consign him to the stake if found"+
+					" out by a fanatical witch hunter. He must hide it well!",""));
+				
+			}
+			else if(result >= 34 && result <= 45)
+			{
+				DHCharacter.Traits.Add(new Trait("Fell Obsession",
+					"This is the same as the Obsession Disorder. However, in this case the character is"+
+					" obsessed by a sinister or malign focus, such as collecting finger-bone trophies, "+
+					"ritual scarification, carrying out meaningless vivisections, etc.",""));
+			}
+			else if(result >= 46 && result <= 50)
+			{
+				DHCharacter.Traits.Add(new Trait("Hatred",
+					"The character develops an implacable hatred of a single group, individual or "+
+					"social class. The character will never side with or aid them without explicit "+
+					"orders or other vital cause, and even then grudgingly.",""));
+			}
+			else if(result >= 51 && result <= 55)
+			{
+				DHCharacter.Traits.Add(new Trait("Irrational Nausea",
+					"The character feels sick at the sight or sound of some otherwise innocuous thing"+
+					" such as prayer books and holy items, bare flesh, human laughter, fresh food, "+
+					"shellfish, etc. When he encounters the object of his revulsion, he must Test "+
+					"Toughness or suffer a –10 penalty to all Tests as long as he remains in its presence.",""));
+			}
+			else if(result >= 56 && result <= 60)
+			{
+				DHCharacter.Traits.Add(new Trait("Wasted Frame",
+					"The character’s pallor becomes corpse-like and his muscles waste away. "+
+					"The character’s Strength is reduced by 1d10.",""));
+				DHCharacter.S.Base -= Dice.Next(1, 11);
+			}
+			else if(result >= 61 && result <= 63)
+			{
+				DHCharacter.Traits.Add(new Trait("Night Terrors",
+					"The character is plagued by Daemonic visions in his sleep. See Horrific Nightmares.",""));
+			}
+			else if(result >= 64 && result <= 70)
+			{
+				DHCharacter.Traits.Add(new Trait("Poor Health",
+					"The character constantly suffers petty illnesses and phantom pains, and his"+
+					" wounds never seem to heal fully. The character’s Toughness is reduced by 1d10.",""));
+				DHCharacter.T.Base -= Dice.Next(1, 11);
+			}
+			else if(result >= 71 && result <= 75)
+			{
+				DHCharacter.Traits.Add(new Trait("Distrustful",
+					"The character cannot conceal the distrust and antipathy he has for others."+
+					" He must take a –10 penalty to Fellowship Tests when dealing with strangers.",""));
+			}
+			else if(result >= 76 && result <= 80)
+			{
+				DHCharacter.Traits.Add(new Trait("Malign Sight", 
+					"The world seems to darken, tarnish and rot if the character looks too long at"+
+					" anything. The character’s Perception is reduced by 1d10.",""));
+				DHCharacter.Per.Base -= Dice.Next(1, 11);
+			}
+			else if(result >= 81 && result <= 83)
+			{
+				DHCharacter.Traits.Add(new Trait("Ashen Taste",
+					"Food and drink hold disgusting tastes and little sustenance for the character,"+
+					" and he can barely stomach eating. The character doubles the negative effects "+
+					"for levels of Fatigue.",""));
+			}
+			else if(result >= 84 && result <= 90)
+			{
+				DHCharacter.Traits.Add(new Trait("Bloodlust",
+					"Murderous rage is never far from the character’s mind. After being wounded in"+
+					" combat, he must Test Willpower to incapacitate or allow his enemies to flee,"+
+					" rather than kill them outright, even if his intent is otherwise.",""));
+			}
+			else if(result >= 91 && result <= 93)
+			{
+				DHCharacter.Traits.Add(new Trait("Blackouts", "The character suffers from inexplicable"+
+					" blackouts. When they occur and what happens during them is up to the GM.",""));
+			}
+			else if(result >= 94 && result <= 100)
+			{
+				DHCharacter.Traits.Add(new Trait("Strange Addiction", 
+					"The character is addicted to some bizarre and unnatural substance, such as "+
+					"eating rose petals, drinking blood, the taste of widows’ tears etc. This acts"+
+					" like a Minor Compulsion, but is freakish enough to cause serious suspicion if "+
+					"found out.",""));
+				
+			}
 		}
 		#endregion
 
