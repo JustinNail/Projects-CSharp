@@ -49,12 +49,6 @@
     <Compile Include="Background.cs" />
     <Compile Include="Career.cs" />
     <Compile Include="DHCharacter.cs" />
-    <Compile Include="DialogBox3.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DialogBox3.Designer.cs">
-      <DependentUpon>DialogBox3.cs</DependentUpon>
-    </Compile>
     <Compile Include="DialogBoxList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,12 +62,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="DialogBox2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DialogBox2.Designer.cs">
-      <DependentUpon>DialogBox2.cs</DependentUpon>
-    </Compile>
     <Compile Include="Origin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,12 +69,6 @@
     <Compile Include="Stat.cs" />
     <Compile Include="Talent.cs" />
     <Compile Include="Trait.cs" />
-    <EmbeddedResource Include="DialogBox2.resx">
-      <DependentUpon>DialogBox2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DialogBox3.resx">
-      <DependentUpon>DialogBox3.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="DialogBoxList.resx">
       <DependentUpon>DialogBoxList.cs</DependentUpon>
     </EmbeddedResource>

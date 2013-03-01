@@ -1065,7 +1065,7 @@ namespace Dark_Heresy_Generator
 				}
 				DialogBoxList EquipDialog = new DialogBoxList(EquipList);
 				EquipDialog.ShowDialog();
-				DHCharacter.Talents.Add(new Talent(EquipDialog.selection, equip.Parent.Parent.Name.ToString()));
+				DHCharacter.Gear.Add(new Equipment(EquipDialog.selection, equip.Parent.Parent.Name.ToString()));
 			}
 			else
 			{
