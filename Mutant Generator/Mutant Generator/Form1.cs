@@ -891,40 +891,16 @@ namespace Dark_Heresy_Generator
 		#region Adding Functions
 		private void Add_Skill(XElement skill)
 		{
-			if (skill.Attributes().Count() == 2)
+			if (skill.Attributes().Count() > 1)
 			{
-				string choice1 = skill.Attribute("choice").Value;
-				string choice2 = skill.Attribute("choice1").Value;
-				DialogBox2 Dialog = new DialogBox2(choice1, choice2);
-				DialogResult result = Dialog.ShowDialog();
-				if (result == DialogResult.Yes)
+				List<string> SkillList = new List<string>();
+				foreach (XAttribute choice in skill.Attributes())
 				{
-					DHCharacter.Skills.Add(new Skill(choice1, skill.Parent.Parent.Name.ToString()));
+					SkillList.Add(choice.Value);
 				}
-				else
-				{
-					DHCharacter.Skills.Add(new Skill(choice2, skill.Parent.Parent.Name.ToString()));
-				}
-			}
-			else if (skill.Attributes().Count() == 3)
-			{
-				string choice1 = skill.Attribute("choice").Value;
-				string choice2 = skill.Attribute("choice1").Value;
-				string choice3 = skill.Attribute("choice2").Value;
-				DialogBox3 Dialog = new DialogBox3(choice1, choice2, choice3);
-				DialogResult result = Dialog.ShowDialog();
-				if (result == DialogResult.Yes)
-				{
-					DHCharacter.Skills.Add(new Skill(choice1, skill.Parent.Parent.Name.ToString()));
-				}
-				else if (result == DialogResult.No)
-				{
-					DHCharacter.Skills.Add(new Skill(choice2, skill.Parent.Parent.Name.ToString()));
-				}
-				else
-				{
-					DHCharacter.Skills.Add(new Skill(choice3, skill.Parent.Parent.Name.ToString()));
-				}
+				DialogBoxList SkillDialog = new DialogBoxList(SkillList);
+				SkillDialog.ShowDialog();
+				DHCharacter.Skills.Add(new Skill(SkillDialog.selection, skill.Parent.Parent.Name.ToString()));
 			}
 			else
 			{
@@ -933,40 +909,16 @@ namespace Dark_Heresy_Generator
 		}
 		private void Add_Talent(XElement talent)
 		{
-			if (talent.Attributes().Count() == 2)
+			if (talent.Attributes().Count() > 1)
 			{
-				string choice1 = talent.Attribute("choice").Value;
-				string choice2 = talent.Attribute("choice1").Value;
-				DialogBox2 Dialog = new DialogBox2(choice1, choice2);
-				DialogResult result = Dialog.ShowDialog();
-				if (result == DialogResult.Yes)
+				List<string> TalentList = new List<string>();
+				foreach (XAttribute choice in talent.Attributes())
 				{
-					DHCharacter.Talents.Add(new Talent(choice1, talent.Parent.Parent.Name.ToString()));
+					TalentList.Add(choice.Value);
 				}
-				else
-				{
-					DHCharacter.Talents.Add(new Talent(choice2, talent.Parent.Parent.Name.ToString()));
-				}
-			}
-			else if (talent.Attributes().Count() == 3)
-			{
-				string choice1 = talent.Attribute("choice").Value;
-				string choice2 = talent.Attribute("choice1").Value;
-				string choice3 = talent.Attribute("choice2").Value;
-				DialogBox3 Dialog = new DialogBox3(choice1, choice2, choice3);
-				DialogResult result = Dialog.ShowDialog();
-				if (result == DialogResult.Yes)
-				{
-					DHCharacter.Talents.Add(new Talent(choice1, talent.Parent.Parent.Name.ToString()));
-				}
-				else if (result == DialogResult.No)
-				{
-					DHCharacter.Talents.Add(new Talent(choice2, talent.Parent.Parent.Name.ToString()));
-				}
-				else
-				{
-					DHCharacter.Talents.Add(new Talent(choice3, talent.Parent.Parent.Name.ToString()));
-				}
+				DialogBoxList TalentDialog = new DialogBoxList(TalentList);
+				TalentDialog.ShowDialog();
+				DHCharacter.Talents.Add(new Talent(TalentDialog.selection, talent.Parent.Parent.Name.ToString()));
 			}
 			else
 			{
@@ -985,6 +937,7 @@ namespace Dark_Heresy_Generator
 			}
 			if (trait.Attribute("name").Value == "Twist")
 			{
+				#region Twist
 				DialogBox2 Dialog = new DialogBox2("Choose 2 Minor Mutations", "1 random Minor, and 1 random Major Mutation");
 				DialogResult result = Dialog.ShowDialog();
 				if (result == DialogResult.Yes)
@@ -1094,44 +1047,25 @@ namespace Dark_Heresy_Generator
 					MinorMutation(Dice.Next(1, 101),"Origin");
 					MajorMutation(Dice.Next(1, 101),"Origin");
 				}
+				#endregion
+			}
+			if (trait.Attribute("name").Value == "Mysterious Lineage")
+			{
+				MysteriousLineage();
 			}
 		}
 		private void Add_Gear(XElement equip)
 		{
-			if (equip.Attributes().Count() == 2)
+			if (equip.Attributes().Count() > 1)
 			{
-				string choice1 = equip.Attribute("choice").Value;
-				string choice2 = equip.Attribute("choice1").Value;
-				DialogBox2 Dialog = new DialogBox2(choice1, choice2);
-				DialogResult result = Dialog.ShowDialog();
-				if (result == DialogResult.Yes)
+				List<string> EquipList = new List<string>();
+				foreach (XAttribute choice in equip.Attributes())
 				{
-					DHCharacter.Gear.Add(new Equipment(choice1, equip.Parent.Parent.Name.ToString()));
+					EquipList.Add(choice.Value);
 				}
-				else
-				{
-					DHCharacter.Gear.Add(new Equipment(choice2, equip.Parent.Parent.Name.ToString()));
-				}
-			}
-			else if (equip.Attributes().Count() == 3)
-			{
-				string choice1 = equip.Attribute("choice").Value;
-				string choice2 = equip.Attribute("choice1").Value;
-				string choice3 = equip.Attribute("choice2").Value;
-				DialogBox3 Dialog = new DialogBox3(choice1, choice2, choice3);
-				DialogResult result = Dialog.ShowDialog();
-				if (result == DialogResult.Yes)
-				{
-					DHCharacter.Gear.Add(new Equipment(choice1, equip.Parent.Parent.Name.ToString()));
-				}
-				else if (result == DialogResult.No)
-				{
-					DHCharacter.Gear.Add(new Equipment(choice2, equip.Parent.Parent.Name.ToString()));
-				}
-				else
-				{
-					DHCharacter.Gear.Add(new Equipment(choice3, equip.Parent.Parent.Name.ToString()));
-				}
+				DialogBoxList EquipDialog = new DialogBoxList(EquipList);
+				EquipDialog.ShowDialog();
+				DHCharacter.Talents.Add(new Talent(EquipDialog.selection, equip.Parent.Parent.Name.ToString()));
 			}
 			else
 			{
@@ -2129,6 +2063,65 @@ namespace Dark_Heresy_Generator
 					"found out.",""));
 				
 			}
+		}
+		private void MysteriousLineage()
+		{
+			int result=0;
+			switch (Dice.Next(1,11))
+			{
+				case 1: case 2:
+					DHCharacter.Traits.Last().Effect=
+						"You are extremely intelligent, though you are prone to peculiar headaches"+
+						" and delusions. Increase your intelligence and insanity points by 1d10 "+
+						"(roll only once and apply the result to both).";
+					result = Dice.Next(1,11);
+					DHCharacter.Int.Base += result;
+					DHCharacter.Insanity += result;
+					break;
+				case 3: case 4:
+					DHCharacter.Traits.Last().Effect=
+						"The constant manipulation of your family's ancestry has rendered you a "+
+						"mule, much to the disappointment of the Ordo Famulous. You gain the Chem "+
+						"Geld talent.";
+					DHCharacter.Talents.Add(new Talent("Chem Geld","origin"));
+					break;
+				case 5: case 6:
+					DHCharacter.Traits.Last().Effect=
+						"You are a naturally gifted orator and dissembler but are unaccustomed to"+
+						" not being the centre of attention. You gain the Talented (Deceive) Talent"+
+						" and a -10 to all Concealment and Move Silent tests.";
+					DHCharacter.Talents.Add(new Talent("Talented(Deceive)","origin"));
+					break;
+				case 7: case 8:
+					DHCharacter.Traits.Last().Effect=
+						"Your health has been affected by an ancient genetic defect, but the "+
+						"Sister Famulous nevertheless prepared you for your destiny. Lose 1 wound "+
+						"and -5 Toughness but begin play with Forbidden Lore (Daemonology, Heresy, "+
+						"Inquisition or Psykers).";
+					DHCharacter.Wounds -= 1;
+					DHCharacter.T.Base -= 5;
+					List<string> list = new List<string>();
+					list.Add("Forbidden Lore(Daemonology)(Int)");
+					list.Add("Forbidden Lore(Heresy)(Int)");
+					list.Add("Forbidden Lore(Inquisition)(Int)");
+					list.Add("Forbidden Lore(Pyskers)(Int)");
+					DialogBoxList SkillDialog = new DialogBoxList(list);
+					DialogResult TalentResult = SkillDialog.ShowDialog();
+					DHCharacter.Skills.Add(new Skill(SkillDialog.selection,"origin"));
+					break;
+				case 9: case 10:
+					DHCharacter.Traits.Last().Effect=
+						"You are astonishingly comely externally but at the cost of hidden imperfections."+
+						"Increase your Fellowship and Corruption points by 1d10 (roll only once and apply"+
+						" the result to both).";
+					result = Dice.Next(1,11);
+					DHCharacter.Fel.Base += result;
+					DHCharacter.Corruption += result;
+					break;
+			}
+
+
+
 		}
 		#endregion
 
