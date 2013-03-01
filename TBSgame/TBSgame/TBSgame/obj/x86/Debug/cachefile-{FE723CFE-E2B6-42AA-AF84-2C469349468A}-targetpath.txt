@@ -1,3 +1,0 @@
-Content\Fonts\Requiem.xnb
-Content\Backgrounds\SplashScreen.xnb
-Content\Backgrounds\TitleScreen.xnb

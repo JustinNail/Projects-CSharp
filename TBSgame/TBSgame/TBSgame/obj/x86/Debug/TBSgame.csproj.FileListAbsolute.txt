@@ -1,9 +1,0 @@
-c:\users\justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\bin\x86\Debug\TBSgame.exe
-c:\users\justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\bin\x86\Debug\TBSgame.pdb
-c:\users\justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\obj\x86\Debug\ResolveAssemblyReference.cache
-c:\users\justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-c:\users\justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\obj\x86\Debug\TBSgame.exe
-c:\users\justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\obj\x86\Debug\TBSgame.pdb
-C:\Users\Justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\bin\x86\Debug\Content\Fonts\Requiem.xnb
-C:\Users\Justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\bin\x86\Debug\Content\Backgrounds\SplashScreen.xnb
-C:\Users\Justin\documents\visual studio 2010\Projects\TBSgame\TBSgame\TBSgame\bin\x86\Debug\Content\Backgrounds\TitleScreen.xnb

@@ -1,6 +1,0 @@
-c:\users\justin\documents\visual studio 2010\Projects\RPGgamePrototype\XRpgLibrary\bin\x86\Debug\XRpgLibrary.dll
-c:\users\justin\documents\visual studio 2010\Projects\RPGgamePrototype\XRpgLibrary\bin\x86\Debug\XRpgLibrary.pdb
-c:\users\justin\documents\visual studio 2010\Projects\RPGgamePrototype\XRpgLibrary\obj\x86\Debug\ResolveAssemblyReference.cache
-c:\users\justin\documents\visual studio 2010\Projects\RPGgamePrototype\XRpgLibrary\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-c:\users\justin\documents\visual studio 2010\Projects\RPGgamePrototype\XRpgLibrary\obj\x86\Debug\XRpgLibrary.dll
-c:\users\justin\documents\visual studio 2010\Projects\RPGgamePrototype\XRpgLibrary\obj\x86\Debug\XRpgLibrary.pdb
