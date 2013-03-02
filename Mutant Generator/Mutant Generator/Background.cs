@@ -10,6 +10,12 @@ namespace Dark_Heresy_Generator
 		public string Name { get; set; }
 		public string Cost { get; set; }
 
+		public Background(string n, string c)
+		{
+			Name = n;
+			Cost = c;
+		}
+
 		public void Reset()
 		{
 			Name = "";

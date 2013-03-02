@@ -129,7 +129,6 @@
 			this.Build_Box = new System.Windows.Forms.TextBox();
 			this.Age_Box = new System.Windows.Forms.TextBox();
 			this.Skin_Box = new System.Windows.Forms.TextBox();
-			this.Eye_Box = new System.Windows.Forms.TextBox();
 			this.Hair_Box = new System.Windows.Forms.TextBox();
 			this.label38 = new System.Windows.Forms.Label();
 			this.Bio_Box = new System.Windows.Forms.RichTextBox();
@@ -147,6 +146,9 @@
 			this.label46 = new System.Windows.Forms.Label();
 			this.Income_Box = new System.Windows.Forms.TextBox();
 			this.Divination_Button = new System.Windows.Forms.Button();
+			this.Random_Button = new System.Windows.Forms.Button();
+			this.Eye_Box = new System.Windows.Forms.TextBox();
+			this.Appearance_Button = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -1003,7 +1005,7 @@
 			this.Skills_Box.Name = "Skills_Box";
 			this.Skills_Box.ReadOnly = true;
 			this.Skills_Box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Skills_Box.Size = new System.Drawing.Size(243, 233);
+			this.Skills_Box.Size = new System.Drawing.Size(243, 245);
 			this.Skills_Box.TabIndex = 0;
 			// 
 			// Talents_Box
@@ -1013,7 +1015,7 @@
 			this.Talents_Box.Name = "Talents_Box";
 			this.Talents_Box.ReadOnly = true;
 			this.Talents_Box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Talents_Box.Size = new System.Drawing.Size(243, 233);
+			this.Talents_Box.Size = new System.Drawing.Size(243, 245);
 			this.Talents_Box.TabIndex = 1;
 			// 
 			// Traits_Box
@@ -1023,7 +1025,7 @@
 			this.Traits_Box.Name = "Traits_Box";
 			this.Traits_Box.ReadOnly = true;
 			this.Traits_Box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Traits_Box.Size = new System.Drawing.Size(243, 233);
+			this.Traits_Box.Size = new System.Drawing.Size(243, 247);
 			this.Traits_Box.TabIndex = 1;
 			// 
 			// tabControl1
@@ -1035,7 +1037,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(279, 109);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(255, 258);
+			this.tabControl1.Size = new System.Drawing.Size(255, 277);
 			this.tabControl1.TabIndex = 12;
 			// 
 			// Traits
@@ -1043,7 +1045,7 @@
 			this.Traits.Controls.Add(this.Traits_Box);
 			this.Traits.Location = new System.Drawing.Point(4, 22);
 			this.Traits.Name = "Traits";
-			this.Traits.Size = new System.Drawing.Size(247, 232);
+			this.Traits.Size = new System.Drawing.Size(247, 251);
 			this.Traits.TabIndex = 2;
 			this.Traits.Text = "Traits";
 			// 
@@ -1053,7 +1055,7 @@
 			this.Skills.Location = new System.Drawing.Point(4, 22);
 			this.Skills.Name = "Skills";
 			this.Skills.Padding = new System.Windows.Forms.Padding(3);
-			this.Skills.Size = new System.Drawing.Size(247, 232);
+			this.Skills.Size = new System.Drawing.Size(247, 251);
 			this.Skills.TabIndex = 0;
 			this.Skills.Text = "Skills";
 			// 
@@ -1063,7 +1065,7 @@
 			this.Talents.Location = new System.Drawing.Point(4, 22);
 			this.Talents.Name = "Talents";
 			this.Talents.Padding = new System.Windows.Forms.Padding(3);
-			this.Talents.Size = new System.Drawing.Size(247, 232);
+			this.Talents.Size = new System.Drawing.Size(247, 251);
 			this.Talents.TabIndex = 1;
 			this.Talents.Text = "Talents";
 			// 
@@ -1072,7 +1074,7 @@
 			this.Gear.Controls.Add(this.Gear_Box);
 			this.Gear.Location = new System.Drawing.Point(4, 22);
 			this.Gear.Name = "Gear";
-			this.Gear.Size = new System.Drawing.Size(247, 232);
+			this.Gear.Size = new System.Drawing.Size(247, 251);
 			this.Gear.TabIndex = 3;
 			this.Gear.Text = "Gear";
 			// 
@@ -1083,7 +1085,7 @@
 			this.Gear_Box.Name = "Gear_Box";
 			this.Gear_Box.ReadOnly = true;
 			this.Gear_Box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Gear_Box.Size = new System.Drawing.Size(243, 233);
+			this.Gear_Box.Size = new System.Drawing.Size(243, 245);
 			this.Gear_Box.TabIndex = 2;
 			// 
 			// groupBox3
@@ -1107,7 +1109,7 @@
 			// 
 			// Reset_Button
 			// 
-			this.Reset_Button.Location = new System.Drawing.Point(93, 398);
+			this.Reset_Button.Location = new System.Drawing.Point(12, 392);
 			this.Reset_Button.Name = "Reset_Button";
 			this.Reset_Button.Size = new System.Drawing.Size(75, 23);
 			this.Reset_Button.TabIndex = 14;
@@ -1117,7 +1119,7 @@
 			// 
 			// Export_Button
 			// 
-			this.Export_Button.Location = new System.Drawing.Point(12, 398);
+			this.Export_Button.Location = new System.Drawing.Point(12, 418);
 			this.Export_Button.Name = "Export_Button";
 			this.Export_Button.Size = new System.Drawing.Size(75, 23);
 			this.Export_Button.TabIndex = 15;
@@ -1137,7 +1139,7 @@
 			// label33
 			// 
 			this.label33.AutoSize = true;
-			this.label33.Location = new System.Drawing.Point(535, 31);
+			this.label33.Location = new System.Drawing.Point(535, 56);
 			this.label33.Name = "label33";
 			this.label33.Size = new System.Drawing.Size(33, 13);
 			this.label33.TabIndex = 17;
@@ -1146,7 +1148,7 @@
 			// label34
 			// 
 			this.label34.AutoSize = true;
-			this.label34.Location = new System.Drawing.Point(539, 54);
+			this.label34.Location = new System.Drawing.Point(539, 79);
 			this.label34.Name = "label34";
 			this.label34.Size = new System.Drawing.Size(29, 13);
 			this.label34.TabIndex = 18;
@@ -1155,7 +1157,7 @@
 			// label35
 			// 
 			this.label35.AutoSize = true;
-			this.label35.Location = new System.Drawing.Point(537, 78);
+			this.label35.Location = new System.Drawing.Point(537, 103);
 			this.label35.Name = "label35";
 			this.label35.Size = new System.Drawing.Size(31, 13);
 			this.label35.TabIndex = 63;
@@ -1164,7 +1166,7 @@
 			// label36
 			// 
 			this.label36.AutoSize = true;
-			this.label36.Location = new System.Drawing.Point(676, 55);
+			this.label36.Location = new System.Drawing.Point(676, 80);
 			this.label36.Name = "label36";
 			this.label36.Size = new System.Drawing.Size(29, 13);
 			this.label36.TabIndex = 64;
@@ -1173,7 +1175,7 @@
 			// label37
 			// 
 			this.label37.AutoSize = true;
-			this.label37.Location = new System.Drawing.Point(677, 78);
+			this.label37.Location = new System.Drawing.Point(677, 103);
 			this.label37.Name = "label37";
 			this.label37.Size = new System.Drawing.Size(28, 13);
 			this.label37.TabIndex = 65;
@@ -1183,41 +1185,33 @@
 			// 
 			this.Name_Box.Location = new System.Drawing.Point(569, 4);
 			this.Name_Box.Name = "Name_Box";
-			this.Name_Box.Size = new System.Drawing.Size(111, 20);
+			this.Name_Box.Size = new System.Drawing.Size(221, 20);
 			this.Name_Box.TabIndex = 66;
 			// 
 			// Build_Box
 			// 
-			this.Build_Box.Location = new System.Drawing.Point(569, 28);
+			this.Build_Box.Location = new System.Drawing.Point(569, 53);
 			this.Build_Box.Name = "Build_Box";
 			this.Build_Box.Size = new System.Drawing.Size(136, 20);
 			this.Build_Box.TabIndex = 67;
 			// 
 			// Age_Box
 			// 
-			this.Age_Box.Location = new System.Drawing.Point(569, 51);
+			this.Age_Box.Location = new System.Drawing.Point(569, 76);
 			this.Age_Box.Name = "Age_Box";
 			this.Age_Box.Size = new System.Drawing.Size(101, 20);
 			this.Age_Box.TabIndex = 68;
 			// 
 			// Skin_Box
 			// 
-			this.Skin_Box.Location = new System.Drawing.Point(569, 75);
+			this.Skin_Box.Location = new System.Drawing.Point(569, 100);
 			this.Skin_Box.Name = "Skin_Box";
 			this.Skin_Box.Size = new System.Drawing.Size(102, 20);
 			this.Skin_Box.TabIndex = 69;
 			// 
-			// Eye_Box
-			// 
-			this.Eye_Box.Location = new System.Drawing.Point(712, 75);
-			this.Eye_Box.Name = "Eye_Box";
-			this.Eye_Box.Size = new System.Drawing.Size(78, 20);
-			this.Eye_Box.TabIndex = 70;
-			this.Eye_Box.TextChanged += new System.EventHandler(this.Eye_Box_TextChanged);
-			// 
 			// Hair_Box
 			// 
-			this.Hair_Box.Location = new System.Drawing.Point(712, 52);
+			this.Hair_Box.Location = new System.Drawing.Point(712, 77);
 			this.Hair_Box.Name = "Hair_Box";
 			this.Hair_Box.Size = new System.Drawing.Size(78, 20);
 			this.Hair_Box.TabIndex = 71;
@@ -1225,7 +1219,7 @@
 			// label38
 			// 
 			this.label38.AutoSize = true;
-			this.label38.Location = new System.Drawing.Point(535, 118);
+			this.label38.Location = new System.Drawing.Point(535, 140);
 			this.label38.Name = "label38";
 			this.label38.Size = new System.Drawing.Size(57, 13);
 			this.label38.TabIndex = 72;
@@ -1233,7 +1227,7 @@
 			// 
 			// Bio_Box
 			// 
-			this.Bio_Box.Location = new System.Drawing.Point(538, 134);
+			this.Bio_Box.Location = new System.Drawing.Point(538, 156);
 			this.Bio_Box.Name = "Bio_Box";
 			this.Bio_Box.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
 			this.Bio_Box.Size = new System.Drawing.Size(250, 233);
@@ -1243,7 +1237,7 @@
 			// label39
 			// 
 			this.label39.AutoSize = true;
-			this.label39.Location = new System.Drawing.Point(709, 31);
+			this.label39.Location = new System.Drawing.Point(709, 56);
 			this.label39.Name = "label39";
 			this.label39.Size = new System.Drawing.Size(28, 13);
 			this.label39.TabIndex = 74;
@@ -1251,7 +1245,7 @@
 			// 
 			// Sex_Box
 			// 
-			this.Sex_Box.Location = new System.Drawing.Point(738, 28);
+			this.Sex_Box.Location = new System.Drawing.Point(738, 53);
 			this.Sex_Box.Name = "Sex_Box";
 			this.Sex_Box.Size = new System.Drawing.Size(52, 20);
 			this.Sex_Box.TabIndex = 75;
@@ -1259,7 +1253,7 @@
 			// label40
 			// 
 			this.label40.AutoSize = true;
-			this.label40.Location = new System.Drawing.Point(578, 104);
+			this.label40.Location = new System.Drawing.Point(578, 129);
 			this.label40.Name = "label40";
 			this.label40.Size = new System.Drawing.Size(35, 13);
 			this.label40.TabIndex = 76;
@@ -1267,7 +1261,7 @@
 			// 
 			// Quirk_Box
 			// 
-			this.Quirk_Box.Location = new System.Drawing.Point(614, 101);
+			this.Quirk_Box.Location = new System.Drawing.Point(614, 126);
 			this.Quirk_Box.Name = "Quirk_Box";
 			this.Quirk_Box.Size = new System.Drawing.Size(176, 20);
 			this.Quirk_Box.TabIndex = 77;
@@ -1275,7 +1269,7 @@
 			// label41
 			// 
 			this.label41.AutoSize = true;
-			this.label41.Location = new System.Drawing.Point(270, 372);
+			this.label41.Location = new System.Drawing.Point(270, 386);
 			this.label41.Name = "label41";
 			this.label41.Size = new System.Drawing.Size(57, 13);
 			this.label41.TabIndex = 78;
@@ -1283,7 +1277,7 @@
 			// 
 			// Divination_Box
 			// 
-			this.Divination_Box.Location = new System.Drawing.Point(329, 372);
+			this.Divination_Box.Location = new System.Drawing.Point(329, 392);
 			this.Divination_Box.Multiline = true;
 			this.Divination_Box.Name = "Divination_Box";
 			this.Divination_Box.ReadOnly = true;
@@ -1293,7 +1287,7 @@
 			// Name_comboBox
 			// 
 			this.Name_comboBox.FormattingEnabled = true;
-			this.Name_comboBox.Location = new System.Drawing.Point(686, 4);
+			this.Name_comboBox.Location = new System.Drawing.Point(569, 26);
 			this.Name_comboBox.Name = "Name_comboBox";
 			this.Name_comboBox.Size = new System.Drawing.Size(104, 21);
 			this.Name_comboBox.TabIndex = 79;
@@ -1321,7 +1315,7 @@
 			// label45
 			// 
 			this.label45.AutoSize = true;
-			this.label45.Location = new System.Drawing.Point(688, 375);
+			this.label45.Location = new System.Drawing.Point(688, 392);
 			this.label45.Name = "label45";
 			this.label45.Size = new System.Drawing.Size(49, 13);
 			this.label45.TabIndex = 68;
@@ -1329,7 +1323,7 @@
 			// 
 			// Money_Box
 			// 
-			this.Money_Box.Location = new System.Drawing.Point(743, 372);
+			this.Money_Box.Location = new System.Drawing.Point(743, 389);
 			this.Money_Box.Name = "Money_Box";
 			this.Money_Box.ReadOnly = true;
 			this.Money_Box.Size = new System.Drawing.Size(47, 20);
@@ -1339,7 +1333,7 @@
 			// label46
 			// 
 			this.label46.AutoSize = true;
-			this.label46.Location = new System.Drawing.Point(603, 401);
+			this.label46.Location = new System.Drawing.Point(603, 418);
 			this.label46.Name = "label46";
 			this.label46.Size = new System.Drawing.Size(45, 13);
 			this.label46.TabIndex = 82;
@@ -1347,7 +1341,7 @@
 			// 
 			// Income_Box
 			// 
-			this.Income_Box.Location = new System.Drawing.Point(654, 398);
+			this.Income_Box.Location = new System.Drawing.Point(654, 415);
 			this.Income_Box.Name = "Income_Box";
 			this.Income_Box.ReadOnly = true;
 			this.Income_Box.Size = new System.Drawing.Size(136, 20);
@@ -1356,7 +1350,7 @@
 			// 
 			// Divination_Button
 			// 
-			this.Divination_Button.Location = new System.Drawing.Point(285, 389);
+			this.Divination_Button.Location = new System.Drawing.Point(285, 403);
 			this.Divination_Button.Name = "Divination_Button";
 			this.Divination_Button.Size = new System.Drawing.Size(42, 22);
 			this.Divination_Button.TabIndex = 84;
@@ -1364,11 +1358,42 @@
 			this.Divination_Button.UseVisualStyleBackColor = true;
 			this.Divination_Button.Click += new System.EventHandler(this.Divination_Button_Click);
 			// 
+			// Random_Button
+			// 
+			this.Random_Button.Location = new System.Drawing.Point(94, 392);
+			this.Random_Button.Name = "Random_Button";
+			this.Random_Button.Size = new System.Drawing.Size(75, 23);
+			this.Random_Button.TabIndex = 85;
+			this.Random_Button.Text = "Randomize";
+			this.Random_Button.UseVisualStyleBackColor = true;
+			this.Random_Button.Click += new System.EventHandler(this.Random_Button_Click);
+			// 
+			// Eye_Box
+			// 
+			this.Eye_Box.Location = new System.Drawing.Point(712, 100);
+			this.Eye_Box.Name = "Eye_Box";
+			this.Eye_Box.Size = new System.Drawing.Size(78, 20);
+			this.Eye_Box.TabIndex = 86;
+			// 
+			// Appearance_Button
+			// 
+			this.Appearance_Button.Enabled = false;
+			this.Appearance_Button.Location = new System.Drawing.Point(691, 26);
+			this.Appearance_Button.Name = "Appearance_Button";
+			this.Appearance_Button.Size = new System.Drawing.Size(75, 23);
+			this.Appearance_Button.TabIndex = 87;
+			this.Appearance_Button.Text = "Re-Roll";
+			this.Appearance_Button.UseVisualStyleBackColor = true;
+			this.Appearance_Button.Click += new System.EventHandler(this.Appearance_Button_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(797, 423);
+			this.ClientSize = new System.Drawing.Size(797, 447);
+			this.Controls.Add(this.Appearance_Button);
+			this.Controls.Add(this.Eye_Box);
+			this.Controls.Add(this.Random_Button);
 			this.Controls.Add(this.Divination_Button);
 			this.Controls.Add(this.Income_Box);
 			this.Controls.Add(this.label46);
@@ -1385,7 +1410,6 @@
 			this.Controls.Add(this.Bio_Box);
 			this.Controls.Add(this.label38);
 			this.Controls.Add(this.Hair_Box);
-			this.Controls.Add(this.Eye_Box);
 			this.Controls.Add(this.Skin_Box);
 			this.Controls.Add(this.Age_Box);
 			this.Controls.Add(this.Build_Box);
@@ -1520,7 +1544,6 @@
 		private System.Windows.Forms.TextBox Build_Box;
 		private System.Windows.Forms.TextBox Age_Box;
 		private System.Windows.Forms.TextBox Skin_Box;
-		private System.Windows.Forms.TextBox Eye_Box;
 		private System.Windows.Forms.TextBox Hair_Box;
 		private System.Windows.Forms.Label label38;
 		private System.Windows.Forms.RichTextBox Bio_Box;
@@ -1544,6 +1567,9 @@
 		private System.Windows.Forms.Label label46;
 		private System.Windows.Forms.TextBox Income_Box;
 		private System.Windows.Forms.Button Divination_Button;
+		private System.Windows.Forms.Button Random_Button;
+		private System.Windows.Forms.TextBox Eye_Box;
+		private System.Windows.Forms.Button Appearance_Button;
 	}
 }
 

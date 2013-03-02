@@ -22,9 +22,9 @@ namespace Dark_Heresy_Generator
 		public static int Insanity { get; set; }
 		public static int Corruption { get; set; }
 
-		public static Origin Origin = new Origin();
-		public static Career Career = new Career();
-		public static Background Background = new Background();
+		public static Origin Origin = new Origin("","");
+		public static Career Career = new Career("","");
+		public static Background Background = new Background("","");
 
 		public static List<Trait> Traits = new List<Trait>();
 		public static List<Skill> Skills = new List<Skill>();
@@ -35,6 +35,7 @@ namespace Dark_Heresy_Generator
 		public static string Income { get; set; }
 
 		public static string Name { get; set; }
+		public static string NameType { get; set; }
 		public static string Sex { get; set; }
 		public static string Build { get; set; }
 		public static string Age { get; set; }

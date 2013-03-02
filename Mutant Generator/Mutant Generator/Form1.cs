@@ -21,7 +21,7 @@ namespace Dark_Heresy_Generator
 		XDocument Careers;
 		XDocument Names;
 		private delegate void DivinationDel();
-		DivinationDel DivDel;
+		DivinationDel DivDel = delegate() { };
 		#endregion
 
 		public Form1()
@@ -93,15 +93,23 @@ namespace Dark_Heresy_Generator
 		#region Combo Boxes
 		private void Fill_Name_comboBox()
 		{
-			Name_comboBox.Items.Clear();//clear the box
-			//select every origin
+			Name_comboBox.Items.Clear();
+			XElement origin = GetOrigin();
 			var names = from name in Names.Element("root").Elements()
 						where (string)(name.Attribute("type").Value) ==
 								(string)(DHCharacter.Sex)
 						select name;
-			names = from name in names.Elements()
+			if (origin.Attribute("name").Value == "Hive Mutant")
+			{
+				names = from name in names.Elements()
 						select name;
-			//add each name type to box
+			}
+			else
+			{
+				names = from name in names.Elements()
+						where name.Attribute("type").Value != "Mutant"
+						select name;
+			}
 			foreach (XElement name in names)
 			{
 				Name_comboBox.Items.Add(name.Attribute("type").Value);
@@ -154,7 +162,7 @@ namespace Dark_Heresy_Generator
 																	name.Name == "name1" ||
 																	name.Name == "name2")
 															select name.Value;
-								if (names.Contains<string>(origin.Attribute("base").Value))
+								if (!names.Contains<string>(origin.Attribute("base").Value))
 								{
 									available = false;
 								}
@@ -273,7 +281,12 @@ namespace Dark_Heresy_Generator
 										select origin.Attribute("base").Value;
 			DHCharacter.Origin.Base = query.First();
 
+			Origin_Selection();
 
+			Appearance_Button.Enabled = true;
+		}
+		private void Origin_Selection()
+		{
 			Reset();
 			Fill_Base_Stats();
 			Add_Origin_Skills();
@@ -294,7 +307,10 @@ namespace Dark_Heresy_Generator
 			string[] attributes = Career_comboBox.SelectedItem.ToString().Split('(',')');
 			DHCharacter.Career.Name = attributes.First();
 			DHCharacter.Career.Base = attributes.Last(s=> s != "");
-
+			Career_Selection();
+		}
+		private void Career_Selection()
+		{
 			Add_Career_Skills();
 			Add_Career_Talents();
 			Add_Career_Traits();
@@ -302,8 +318,14 @@ namespace Dark_Heresy_Generator
 
 			Add_Wealth();
 
-			if (GetCareer().Attribute("base").Value == "Adepta Sororitas" &&
-				DHCharacter.Sex != "Female")
+			if ((GetCareer().Attribute("base").Value == "Adepta Sororitas" &&
+				DHCharacter.Sex != "Female") ||
+				(GetCareer().Attribute("name").Value == "Sister Diagolous" &&
+				DHCharacter.Sex != "Female") ||
+				(GetCareer().Attribute("name").Value == "Sister Famulous" &&
+				DHCharacter.Sex != "Female") ||
+				(GetCareer().Attribute("name").Value == "Sister Hospitaller" &&
+				DHCharacter.Sex != "Female"))
 			{
 				#region Appearance
 				Name_Box.Clear();
@@ -316,6 +338,22 @@ namespace Dark_Heresy_Generator
 				Quirk_Box.Clear();
 				#endregion
 				DHCharacter.Sex = "Female";
+				Add_Appearance();
+			}
+			if (GetCareer().Attribute("name").Value == "Fraternis Militia" &&
+				DHCharacter.Sex != "Male")
+			{
+				#region Appearance
+				Name_Box.Clear();
+				Sex_Box.Clear();
+				Build_Box.Clear();
+				Age_Box.Clear();
+				Skin_Box.Clear();
+				Hair_Box.Clear();
+				Eye_Box.Clear();
+				Quirk_Box.Clear();
+				#endregion
+				DHCharacter.Sex = "Male";
 				Add_Appearance();
 			}
 
@@ -334,20 +372,32 @@ namespace Dark_Heresy_Generator
 		}
 		private void Name_comboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			IEnumerable<XElement> query;
+			DHCharacter.NameType = Name_comboBox.SelectedItem.ToString();
+			Name_Selection();
+		}
+		private void Name_Selection()
+		{
+			if (DHCharacter.NameType == "Mutant")
+			{
+				DHCharacter.Name = MutantName();
+			}
+			else
+			{
+				IEnumerable<XElement> query;
 
-			query = from names in Names.Element("root").Elements()
-					where (string)(names.Attribute("type").Value) ==
-								(string)(Sex_Box.Text)
-					select names;
+				query = from names in Names.Element("root").Elements()
+						where (string)(names.Attribute("type").Value) ==
+									(string)(DHCharacter.Sex)
+						select names;
 
-			query = from name in query.Elements()
-					where (string)(name.Attribute("type").Value) ==
-								(string)(Name_comboBox.SelectedItem)
-					select name;
+				query = from name in query.Elements()
+						where (string)(name.Attribute("type").Value) ==
+									(string)(DHCharacter.NameType)
+						select name;
 
-			int Size = query.Elements().Count();
-			DHCharacter.Name = query.Elements().ElementAt(Dice.Next(Size)).Value;
+				int Size = query.Elements().Count();
+				DHCharacter.Name = query.Elements().ElementAt(Dice.Next(Size)).Value;
+			}
 			CharacterUpdate();
 		}
 		private void Background_comboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -356,6 +406,10 @@ namespace Dark_Heresy_Generator
 			DHCharacter.Background.Name = attributes.First();
 			DHCharacter.Background.Cost = attributes.Last(s => s != "");
 
+			Background_Selection();
+		}
+		private void Background_Selection()
+		{
 			Add_Back_Stats();
 			Add_Back_Skills();
 			Add_Back_Talents();
@@ -365,6 +419,14 @@ namespace Dark_Heresy_Generator
 			Add_Back_Fate();
 			Add_Back_Insanity();
 			Add_Back_Corruption();
+			if (DHCharacter.Background.Name == "Cold Trader")
+			{
+				ColdTraderChoice();
+			}
+			if (DHCharacter.Background.Name == "Hive Gang Member")
+			{
+				HiveGangChoice();
+			}
 			CharacterUpdate();
 		}
 		#endregion
@@ -731,33 +793,36 @@ namespace Dark_Heresy_Generator
 				if ((ExportStream = saveFileDialog1.OpenFile()) != null)
 				{
 					StreamWriter sw = new StreamWriter(ExportStream);
-					sw.WriteLine("Name: {0}", Name_Box.Text);
+					sw.WriteLine("Name: {0}", DHCharacter.Name);
 					sw.WriteLine("Origin: {0}  Career: {1}",
-						Origin_comboBox.SelectedItem, Career_comboBox.SelectedItem);
-					sw.WriteLine("Background: {0}",Background_comboBox.SelectedItem);
+						DHCharacter.Origin.Name, DHCharacter.Career.Name);
+					sw.WriteLine("Background: {0} {1}",
+						DHCharacter.Background.Name,DHCharacter.Background.Cost);
 					sw.WriteLine("==================================================");
 					sw.WriteLine("Sex: {0}  Age: {1}  Build: {2}",
-						Sex_Box.Text,Age_Box.Text,Build_Box.Text);
+						DHCharacter.Sex,DHCharacter.Age,DHCharacter.Build);
 					sw.WriteLine("Skin: {0}  Eye: {1}  Hair: {2}",
-						Skin_Box.Text, Eye_Box.Text, Hair_Box.Text);
-					sw.WriteLine("Quirk: {0}",Quirk_Box.Text);
+						DHCharacter.Skin, DHCharacter.Eye, DHCharacter.Hair);
+					sw.WriteLine("Quirk: {0}",DHCharacter.Quirk);
 					sw.WriteLine("==================================================");
-					sw.WriteLine("Divination: {0}", Divination_Box.Text);
-					sw.WriteLine("Bio: {0}", Bio_Box.Text);
+					sw.WriteLine("Divination: {0}",Divination_Box.Text);
+					sw.WriteLine("Bio: {0}",DHCharacter.Bio);
 					sw.WriteLine("==================================================");
 					sw.WriteLine();
-					sw.WriteLine("WS: {0}", WS_Box.Text);
-					sw.WriteLine("BS: {0}", BS_Box.Text);
-					sw.WriteLine("S: {0}", S_Box.Text);
-					sw.WriteLine("T: {0}", T_Box.Text);
-					sw.WriteLine("Ag: {0}", Ag_Box.Text);
-					sw.WriteLine("Int: {0}", Int_Box.Text);
-					sw.WriteLine("Per: {0}", Per_Box.Text);
-					sw.WriteLine("Wp: {0}", Wp_Box.Text);
-					sw.WriteLine("Fel: {0}", Fel_Box.Text);
+					sw.WriteLine("WS: {0}", DHCharacter.WS.Value);
+					sw.WriteLine("BS: {0}", DHCharacter.BS.Value);
+					sw.WriteLine("S: {0}", DHCharacter.S.Value);
+					sw.WriteLine("T: {0}", DHCharacter.T.Value);
+					sw.WriteLine("Ag: {0}", DHCharacter.Ag.Value);
+					sw.WriteLine("Int: {0}", DHCharacter.Int.Value);
+					sw.WriteLine("Per: {0}", DHCharacter.Per.Value);
+					sw.WriteLine("Wp: {0}", DHCharacter.Wp.Value);
+					sw.WriteLine("Fel: {0}", DHCharacter.Fel.Value);
 					sw.WriteLine();
-					sw.WriteLine("Wounds: {0}  Fate Points: {1}", Wounds_Box.Text, Fate_Box.Text);
-					sw.WriteLine("Insanity: {0}  Corruption: {1}", Insanity_Box.Text, Corruption_Box.Text);
+					sw.WriteLine("Wounds: {0}  Fate Points: {1}", 
+						DHCharacter.Wounds, DHCharacter.Fate);
+					sw.WriteLine("Insanity: {0}  Corruption: {1}", 
+						DHCharacter.Insanity, DHCharacter.Corruption);
 					sw.WriteLine();
 					sw.WriteLine("Traits:");
 					sw.WriteLine(Traits_Box.Text);
@@ -771,8 +836,8 @@ namespace Dark_Heresy_Generator
 					sw.WriteLine("Starting Gear:");
 					sw.WriteLine(Gear_Box.Text);
 					sw.WriteLine();
-					sw.WriteLine("Thrones: {0}", Money_Box.Text);
-					sw.WriteLine("Income: {0}", Income_Box.Text);
+					sw.WriteLine("Thrones: {0}", DHCharacter.Thrones);
+					sw.WriteLine("Income: {0}", DHCharacter.Income);
 					sw.Close();
 					ExportStream.Close();
 				}
@@ -783,6 +848,10 @@ namespace Dark_Heresy_Generator
 			Reset();
 		}
 		private void Roll_button_Click(object sender, EventArgs e)
+		{
+			Roll();
+		}
+		private void Roll()
 		{
 			Career_comboBox.Items.Clear();
 			WS_Roll();
@@ -938,120 +1007,130 @@ namespace Dark_Heresy_Generator
 			if (trait.Attribute("name").Value == "Twist")
 			{
 				#region Twist
-				DialogBox2 Dialog = new DialogBox2("Choose 2 Minor Mutations", "1 random Minor, and 1 random Major Mutation");
-				DialogResult result = Dialog.ShowDialog();
-				if (result == DialogResult.Yes)
+				List<string> ChoiceList = new List<string>();
+				ChoiceList.Add("Choose 2 Minor Mutations");
+				ChoiceList.Add("1 random Minor, and 1 random Major Mutation");
+				DialogBoxList Dialog = new DialogBoxList(ChoiceList);
+				Dialog.ShowDialog();
+				switch (Dialog.selection)
 				{
-					List<string> list = new List<string>();
-					list.Add("Grotesque");
-					list.Add("Tough Hide");
-					list.Add("Misshapen");
-					list.Add("Feels No Pain");
-					list.Add("Brute");
-					list.Add("Nightsider");
-					list.Add("Big Eyes");
-					list.Add("Malformed Hands");
-					list.Add("Tox Blood");
-					list.Add("Wyrdling");
-					DialogBoxList MutationDialog = new DialogBoxList(list);
-					DialogResult MutationResult = MutationDialog.ShowDialog();
-					switch (MutationDialog.selection)
-					{
-						case ("Grotesque"):
-							MinorMutation(1, "Origin");
-							break;
-						case("Tough Hide"):
-							MinorMutation(21, "Origin");
-							break;
-						case("Misshapen"):
-							MinorMutation(31, "Origin");
-							break;
-						case("Feels No Pain"):
-							MinorMutation(41, "Origin");
-							break;
-						case("Brute"):
-							MinorMutation(51, "Origin");
-							break;
-						case("Nightsider"):
-							MinorMutation(61, "Origin");
-							break;
-						case("Big Eyes"):
-							MinorMutation(71, "Origin");
-							break;
-						case("Malformed Hands"):
-							MinorMutation(81, "Origin");
-							break;
-						case("Tox Blood"):
-							MinorMutation(86, "Origin");
-							break;
-						case("Wyrdling"):
-							MinorMutation(90, "Origin");
-							break;
-					}
-					List<string> list1 = new List<string>();
-					list1.Add("Grotesque");
-					list1.Add("Tough Hide");
-					list1.Add("Misshapen");
-					list1.Add("Feels No Pain");
-					list1.Add("Brute");
-					list1.Add("Nightsider");
-					list1.Add("Big Eyes");
-					list1.Add("Malformed Hands");
-					list1.Add("Tox Blood");
-					list1.Add("Wyrdling");
-					for (int i = 0; i < list1.Count; i++)
-					{
-						if (list1.ElementAt(i) == MutationDialog.selection)
+					case "Choose 2 Minor Mutations":
+						#region Minor
+						List<string> list = new List<string>();
+						list.Add("Grotesque");
+						list.Add("Tough Hide");
+						list.Add("Misshapen");
+						list.Add("Feels No Pain");
+						list.Add("Brute");
+						list.Add("Nightsider");
+						list.Add("Big Eyes");
+						list.Add("Malformed Hands");
+						list.Add("Tox Blood");
+						list.Add("Wyrdling");
+						DialogBoxList MutationDialog = new DialogBoxList(list);
+						MutationDialog.ShowDialog();
+						switch (MutationDialog.selection)
 						{
-							list1.RemoveAt(i);
+							case ("Grotesque"):
+								MinorMutation(1, "Origin");
+								break;
+							case("Tough Hide"):
+								MinorMutation(21, "Origin");
+								break;
+							case("Misshapen"):
+								MinorMutation(31, "Origin");
+								break;
+							case("Feels No Pain"):
+								MinorMutation(41, "Origin");
+								break;
+							case("Brute"):
+								MinorMutation(51, "Origin");
+								break;
+							case("Nightsider"):
+								MinorMutation(61, "Origin");
+								break;
+							case("Big Eyes"):
+								MinorMutation(71, "Origin");
+								break;
+							case("Malformed Hands"):
+								MinorMutation(81, "Origin");
+								break;
+							case("Tox Blood"):
+								MinorMutation(86, "Origin");
+								break;
+							case("Wyrdling"):
+								MinorMutation(90, "Origin");
+								break;
 						}
-					}
-					DialogBoxList MutationDialog1 = new DialogBoxList(list1);
-					DialogResult MutationResult1 = MutationDialog1.ShowDialog();
-					switch (MutationDialog1.selection)
-					{
-						case ("Grotesque"):
-							MinorMutation(1, "Origin");
-							break;
-						case ("Tough Hide"):
-							MinorMutation(21, "Origin");
-							break;
-						case ("Misshapen"):
-							MinorMutation(31, "Origin");
-							break;
-						case ("Feels No Pain"):
-							MinorMutation(41, "Origin");
-							break;
-						case ("Brute"):
-							MinorMutation(51, "Origin");
-							break;
-						case ("Nightsider"):
-							MinorMutation(61, "Origin");
-							break;
-						case ("Big Eyes"):
-							MinorMutation(71, "Origin");
-							break;
-						case ("Malformed Hands"):
-							MinorMutation(81, "Origin");
-							break;
-						case ("Tox Blood"):
-							MinorMutation(86, "Origin");
-							break;
-						case ("Wyrdling"):
-							MinorMutation(90, "Origin");
-							break;
-					}
-				}
-				else
-				{
-					MinorMutation(Dice.Next(1, 101),"Origin");
-					MajorMutation(Dice.Next(1, 101),"Origin");
-				}
+						List<string> list1 = new List<string>();
+						list1.Add("Grotesque");
+						list1.Add("Tough Hide");
+						list1.Add("Misshapen");
+						list1.Add("Feels No Pain");
+						list1.Add("Brute");
+						list1.Add("Nightsider");
+						list1.Add("Big Eyes");
+						list1.Add("Malformed Hands");
+						list1.Add("Tox Blood");
+						list1.Add("Wyrdling");
+						for (int i = 0; i < list1.Count; i++)
+						{
+							if (list1.ElementAt(i) == MutationDialog.selection)
+							{
+								list1.RemoveAt(i);
+							}
+						}
+						DialogBoxList MutationDialog1 = new DialogBoxList(list1);
+						MutationDialog1.ShowDialog();
+						switch (MutationDialog1.selection)
+						{
+							case ("Grotesque"):
+								MinorMutation(1, "Origin");
+								break;
+							case ("Tough Hide"):
+								MinorMutation(21, "Origin");
+								break;
+							case ("Misshapen"):
+								MinorMutation(31, "Origin");
+								break;
+							case ("Feels No Pain"):
+								MinorMutation(41, "Origin");
+								break;
+							case ("Brute"):
+								MinorMutation(51, "Origin");
+								break;
+							case ("Nightsider"):
+								MinorMutation(61, "Origin");
+								break;
+							case ("Big Eyes"):
+								MinorMutation(71, "Origin");
+								break;
+							case ("Malformed Hands"):
+								MinorMutation(81, "Origin");
+								break;
+							case ("Tox Blood"):
+								MinorMutation(86, "Origin");
+								break;
+							case ("Wyrdling"):
+								MinorMutation(90, "Origin");
+								break;
+						}
+					#endregion
+						break;
+					case "1 random Minor, and 1 random Major Mutation":
+						MinorMutation(Dice.Next(1, 101),"Origin");
+						MajorMutation(Dice.Next(1, 101),"Origin");
+						break;
+				}				
 				#endregion
 			}
 			if (trait.Attribute("name").Value == "Mysterious Lineage")
 			{
 				MysteriousLineage();
+			}
+			if (trait.Attribute("name").Value == "Guiding Hand of the Emperor")
+			{
+				GuidingHandEmperor();
 			}
 		}
 		private void Add_Gear(XElement equip)
@@ -1165,14 +1244,14 @@ namespace Dark_Heresy_Generator
 				if (result >= int.Parse(build.Attribute("lower").Value) &&
 					result <= int.Parse(build.Attribute("upper").Value))
 				{
-					Build_Box.AppendText(build.Attribute("name").Value + ": ");
+					DHCharacter.Build = build.Attribute("name").Value + ": ";
 					if (DHCharacter.Sex == "Male")
 					{
-						DHCharacter.Build = build.Attribute("Male").Value;
+						DHCharacter.Build = DHCharacter.Build + build.Attribute("Male").Value;
 					}
 					else
 					{
-						DHCharacter.Build = build.Attribute("Female").Value;
+						DHCharacter.Build = DHCharacter.Build + build.Attribute("Female").Value;
 					}
 					break;
 				}
@@ -1366,24 +1445,23 @@ namespace Dark_Heresy_Generator
 		private void Add_Back_Stats()
 		{
 			XElement back = GetBackground();
+			string choice;
 			foreach (XElement stat in back.Element("stats").Elements())
 			{
-				string choice;
-				if(stat.Attributes().Count() == 3)
+				List<string> StatList = new List<string>();
+				if (stat.Attributes().Count() > 2)
 				{
-					string choice1 = stat.Attribute("name").Value;
-					string choice2 = stat.Attribute("name1").Value;
-					string amount = stat.Attribute("amount").Value;
-					DialogBox2 Dialog = new DialogBox2(choice1 +" +"+ amount, choice2 +" +"+ amount);
-					DialogResult result = Dialog.ShowDialog();
-					if (result == DialogResult.Yes)
+					foreach (XAttribute x in stat.Attributes())
 					{
-						choice = choice1;
+						if (x.Name == "amount")
+						{
+							break;
+						}
+						StatList.Add(x.Value +" +"+ stat.Attribute("amount").Value);
 					}
-					else
-					{
-						choice = choice2;
-					}
+					DialogBoxList StatDialog = new DialogBoxList(StatList);
+					StatDialog.ShowDialog();
+					choice = StatDialog.selection.Split(' ').First();
 				}
 				else
 				{
@@ -1418,6 +1496,9 @@ namespace Dark_Heresy_Generator
 						break;
 					case "Fel":
 						DHCharacter.Fel.Base += (int.Parse(stat.Attribute("amount").Value));
+						break;
+					case "Wounds":
+						DHCharacter.Wounds += (int.Parse(stat.Attribute("amount").Value));
 						break;
 				}
 			}
@@ -1485,7 +1566,7 @@ namespace Dark_Heresy_Generator
 						DHCharacter.Income = back.Element("wealth").Element("income").Attribute("name").Value;
 						break;
 					case "add":
-						DHCharacter.Income += (back.Element("wealth").Element("income").Attribute("name").Value);
+						DHCharacter.Income +=" And "+ (back.Element("wealth").Element("income").Attribute("name").Value);
 						break;
 				}
 			}
@@ -1555,7 +1636,16 @@ namespace Dark_Heresy_Generator
 					DHCharacter.BS.Base += 3;
 					break;
 				case "Scum":
-					DHCharacter.Per.Base += 3;
+					if (GetCareer().Attribute("name").Value == "Lathesmaster")
+					{
+						DHCharacter.S.Base += 3;
+						DHCharacter.T.Base += 3;
+						DHCharacter.Ag.Base -= 5;
+					}
+					else
+					{
+						DHCharacter.Per.Base += 3;
+					}
 					break;
 				case "Tech-Priest":
 					DHCharacter.Wp.Base += 3;
@@ -1929,6 +2019,47 @@ namespace Dark_Heresy_Generator
 			}
 			CharacterUpdate();
 		}
+		private string MutantName()
+		{
+			List<string> namelist = new List<string>();
+			var Mutations = from name in Names.Element("root").Elements()
+							where name.Attribute("type").Value == DHCharacter.Sex
+							select name;
+			Mutations = from name in Mutations.Elements()
+						where name.Attribute("type").Value == "Mutant"
+						select name;
+			foreach (Trait Mutation in DHCharacter.Traits)
+			{
+				foreach (XElement Mut in Mutations.Elements())
+				{
+					if (Mutation.Name == Mut.Attribute("name").Value)
+					{
+						var query = from name in Mut.Elements()
+									select name;
+						namelist.Add(query.ElementAt(Dice.Next(query.Count())).Value);
+					}
+				}
+				if (namelist.Count == 2)
+				{
+					break;
+				}
+			}
+			string selectedname = namelist.ElementAt(Dice.Next(namelist.Count));
+			IEnumerable<XElement> Iname;
+
+				Iname = from names in Names.Element("root").Elements()
+						where (string)(names.Attribute("type").Value) ==
+									(string)(Sex_Box.Text)
+						select names;
+
+				Iname = from name in Iname.Elements()
+						where (string)(name.Attribute("type").Value) !=
+									"Mutant"
+						select name;
+	
+			string insertname = Iname.Elements().ElementAt(Dice.Next(Iname.Elements().Count())).Value;
+			return selectedname.Replace("X", insertname);
+		}
 		private void Malignancy()
 		{
 			int result = Dice.Next(1,101);
@@ -2123,6 +2254,123 @@ namespace Dark_Heresy_Generator
 
 
 		}
+		private void ColdTraderChoice()
+		{
+			List<string> ChoiceList = new List<string>();
+			ChoiceList.Add("Exotic Weapon Training(Needle Rifle) & Needle Rifle with 2 reloads");
+			ChoiceList.Add("Exotic Weapon Training(Web Pistol) & Web Pistol with 2 reloads");
+			ChoiceList.Add("Speak Language(Pick One Xenos) and a suit of Xeno Mesh armour");
+			DialogBoxList ChoiceDialog = new DialogBoxList(ChoiceList);
+			ChoiceDialog.ShowDialog();
+			switch (ChoiceDialog.selection)
+			{
+				case "Exotic Weapon Training(Needle Rifle) & Needle Rifle w/ 2 reloads":
+					DHCharacter.Talents.Add(new Talent("Exotic Weapon Training(Needle Rifle)", "background"));
+					DHCharacter.Gear.Add(new Equipment("Needle Rifle with 2 reloads", "background"));
+					break;
+
+				case "Exotic Weapon Training(Web Pistol) & Web Pistol with 2 reloads":
+					DHCharacter.Talents.Add(new Talent("Exotic Weapon Training(Web Pistol)", "background"));
+					DHCharacter.Gear.Add(new Equipment("Web Pistol with 2 reloads", "background"));
+					break;
+
+				case "Speak Language(Pick One Xenos) and Xeno Mesh":
+					DHCharacter.Talents.Add(new Talent("Speak Language(Pick One Xenos)", "background"));
+					DHCharacter.Gear.Add(new Equipment("Xeno Mesh armour", "background"));
+					break;
+			}
+		}
+		private void HiveGangChoice()
+		{
+			List<string> list = new List<string>();
+			list.Add("Awareness(Per)");
+			list.Add("Dodge(Ag)");
+			list.Add("Concealment(Ag)");
+			list.Add("Gamble(Int)");
+			list.Add("Evaluate(Int)");
+			list.Add("Tech-Use(Int(");
+			
+			DialogBoxList ChoiceDialog = new DialogBoxList(list);
+			ChoiceDialog.ShowDialog();
+
+			DHCharacter.Skills.Add(new Skill(ChoiceDialog.selection, "background"));
+
+			List<string> list1 = new List<string>();
+			list1.Add("Awareness(Per)");
+			list1.Add("Dodge(Ag)");
+			list1.Add("Concealment(Ag)");
+			list1.Add("Gamble(Int)");
+			list1.Add("Evaluate(Int)");
+			list1.Add("Tech-Use(Int(");
+			for (int i = 0; i < list1.Count; i++)
+			{
+				if (list1.ElementAt(i) == ChoiceDialog.selection)
+				{
+					list1.RemoveAt(i);
+				}
+			}
+
+			DialogBoxList ChoiceDialog1 = new DialogBoxList(list);
+			ChoiceDialog1.ShowDialog();
+
+			DHCharacter.Skills.Add(new Skill(ChoiceDialog1.selection, "background"));
+		}
+		private void GuidingHandEmperor()
+		{
+			int result=0;
+			switch (Dice.Next(1, 11))
+			{
+				case 1:
+				case 2:
+					DHCharacter.Traits.Last().Effect =
+						"You have been blessed with visions of the Immortal Foe and given the knowledge" +
+						" on how to defeat them, at the cost of their sanity. Gain Hatred(Daemons) " +
+						"and 1d10 Insanity Points";
+					DHCharacter.Talents.Add(new Talent("Hatred(Daemons)", "background"));
+					result = Dice.Next(1, 11);
+					DHCharacter.Insanity += result;
+					break;
+				case 3:
+				case 4:
+					DHCharacter.Traits.Last().Effect =
+						"The process has left the body broken, but the mind sharper. Reduce character's" +
+						" Strength by 1d10, but increase Intelligence by the same amount";
+					result = Dice.Next(1, 11);
+					DHCharacter.S.Base -= result;
+					DHCharacter.Int.Base += result;
+					break;
+				case 5:
+				case 6:
+					DHCharacter.Traits.Last().Effect =
+						"The strength of the wards inscribed into your bones has filled you with the " +
+						"Light of the Emperor. Unfortunately this inner fire steadily roasts your skin," +
+						" which burns and sloughs off in large patches and heals slowly. Reduce " +
+						"Fellowship by 1d10 and gain a Fate Point";
+					result = Dice.Next(1, 11);
+					DHCharacter.Fel.Base -= result;
+					DHCharacter.Fate += 1;
+					break;
+				case 7:
+				case 8:
+					DHCharacter.Traits.Last().Effect =
+						"Your eyes are aglow with the power inscribed within, but this makes you a " +
+						"beacon for any foe lashing out psychically. Gain Dark Sight, but are -10 to " +
+						"any test to resist psychic powers used by non daemons";
+					DHCharacter.Traits.Add(new Trait("Dark Sight",
+					"See normally even in areas of total darkness and never takes a penalty in " +
+					"dim or no lighting.", "background"));
+					break;
+				case 9:
+				case 10:
+					DHCharacter.Traits.Last().Effect =
+						"The warding process left no outward markings upon the skin, and the only " +
+						"visible sign of the process is a small mark on the tongue. The engraving " +
+						"on your bones, however, is carefully designed to thwart the powers of a " +
+						"specific warp entity. The GM chooses a daemonic entity and you are immune to " +
+						"any fear or corruptive influence from this entity";
+					break;
+			}
+		}
 		#endregion
 
 		private void CharacterUpdate()
@@ -2172,7 +2420,7 @@ namespace Dark_Heresy_Generator
 			Traits_Box.Clear();
 			foreach (Trait t in DHCharacter.Traits)
 			{
-				if (!Traits_Box.Text.Contains(t.Name))
+				if (!Traits_Box.Text.Contains(t.Effect))
 				{
 					Traits_Box.AppendText(t.Name + "\n");
 					Traits_Box.AppendText(t.Effect + "\n\n");
@@ -2223,7 +2471,8 @@ namespace Dark_Heresy_Generator
 		private void Reset()
 		{
 			DHCharacter.Reset();
-
+			Career_comboBox.Items.Clear();
+			Background_comboBox.Items.Clear();
 			Divination_Box.Clear();
 			DivDel = delegate() { };
 
@@ -2233,9 +2482,207 @@ namespace Dark_Heresy_Generator
 			Reroll_Disable();
 		}
 
-		private void Eye_Box_TextChanged(object sender, EventArgs e)
+		private void Random_Button_Click(object sender, EventArgs e)
 		{
+			Reset();
+			#region Origin
+			var origins = from s in Origins.Element("root").Elements()
+						  select s;
+			int selection = Dice.Next(origins.Count());
+			string OName = origins.ElementAt(selection).Attribute("name").Value;
+			string OBase = origins.ElementAt(selection).Attribute("base").Value;
+			DHCharacter.Origin.Name = OName;
+			DHCharacter.Origin.Base = OBase;
+			
+			Origin_comboBox.SelectedItem = DHCharacter.Name;
 
+			Origin_Selection();
+			#endregion
+			Roll();
+			#region Career
+			List<Career> careerChoices = new List<Career>();
+			XElement origin = GetOrigin();
+			IEnumerable<string> careers = from career in origin.Element("careers").Elements()
+										  where career.Attribute("available").Value == "True"
+										  select career.Attribute("name").Value;
+
+			IEnumerable<XElement> query = from career in Careers.Element("root").Elements()
+										  where careers.Contains<string>(career.Attribute("base").Value)
+										  select career;
+
+			foreach (XElement career in query)
+			{
+				bool available = true;
+				if (career.Element("requirements").Elements().Count() > 0)
+				{
+					foreach (XElement requirement in career.Element("requirements").Elements())
+					{
+						#region Type Switch
+						switch (requirement.Attribute("type").Value)
+						{
+							case "origin, specific":
+								if (requirement.Attribute("name").Value !=
+									origin.Attribute("name").Value)
+								{
+									available = false;
+								}
+								break;
+							case "origin, general":
+								IEnumerable<string> names = from name in requirement.Attributes()
+															where (name.Name == "name" ||
+																	name.Name == "name1" ||
+																	name.Name == "name2")
+															select name.Value;
+								if (!names.Contains<string>(origin.Attribute("base").Value))
+								{
+									available = false;
+								}
+								break;
+							case "stat":
+								#region Stat Switch
+								switch (requirement.Attribute("name").Value)
+								{
+									case "WS":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(WS_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "BS":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(BS_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "S":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(S_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "T":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(T_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Ag":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Ag_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Int":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Int_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Per":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Per_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Wp":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Wp_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Fel":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Fel_Box.Text))
+										{
+											available = false;
+										}
+										break;
+								}
+								#endregion
+								break;
+						}
+						#endregion
+					}
+				}
+				if (available)
+				{
+					careerChoices.Add(new Career(career.Attribute("name").Value, career.Attribute("base").Value));
+				}
+			}
+			DHCharacter.Career = careerChoices.ElementAt(Dice.Next(careerChoices.Count));
+			
+			string careername = "";
+			if (DHCharacter.Career.Name != DHCharacter.Career.Base)
+			{
+				careername = DHCharacter.Career.Name + "(" + DHCharacter.Career.Base + ")";
+			}
+			else
+			{
+				careername = DHCharacter.Career.Name;
+			}
+			Career_comboBox.SelectedItem = careername;
+
+			Career_Selection();
+			#endregion
+			#region Background
+			if (Dice.Next() % 2 == 0)
+			{
+				XElement career = GetCareer();
+				var backs = from back in career.Element("backgrounds").Elements()
+							where back.Attribute("origin").Value.Contains(origin.Attribute("base").Value)
+							select back;
+				XElement background = backs.ElementAt(Dice.Next(backs.Count()));
+				DHCharacter.Background.Name = background.Attribute("name").Value;
+				DHCharacter.Background.Cost = background.Attribute("cost").Value;
+				
+				Background_comboBox.SelectedItem = DHCharacter.Background.Name + ": " + DHCharacter.Background.Cost;
+
+				Background_Selection();
+			}
+			#endregion
+			#region Name
+			if (DHCharacter.Origin.Name == "Hive Mutant")
+			{
+				DHCharacter.NameType = "Mutant";
+			}
+			else
+			{
+				var names = from name in Names.Element("root").Elements()
+							where (string)(name.Attribute("type").Value) ==
+									(string)(DHCharacter.Sex)
+							select name;
+				names = from name in names.Elements()
+						where name.Attribute("type").Value != "Mutant"
+						select name;
+
+				DHCharacter.NameType = names.ElementAt(Dice.Next(names.Count())).Attribute("type").Value;
+			}
+			Name_Selection();
+			#endregion
+		}
+		private void Appearance_Button_Click(object sender, EventArgs e)
+		{
+			#region Appearance
+			Name_Box.Clear();
+			Sex_Box.Clear();
+			Build_Box.Clear();
+			Age_Box.Clear();
+			Skin_Box.Clear();
+			Hair_Box.Clear();
+			Eye_Box.Clear();
+			Quirk_Box.Clear();
+			#endregion
+			Set_Sex();
+			Add_Appearance();
+			CharacterUpdate();
 		}	
 	}
 }
