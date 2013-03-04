@@ -29,6 +29,8 @@
 		private void InitializeComponent()
 		{
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.label10 = new System.Windows.Forms.Label();
+			this.Wounds_Box = new System.Windows.Forms.TextBox();
 			this.Fel_Box = new System.Windows.Forms.TextBox();
 			this.Wp_Box = new System.Windows.Forms.TextBox();
 			this.Per_Box = new System.Windows.Forms.TextBox();
@@ -49,21 +51,29 @@
 			this.WS_Box = new System.Windows.Forms.TextBox();
 			this.Binding_comboBox = new System.Windows.Forms.ComboBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.Wounds_Box = new System.Windows.Forms.TextBox();
-			this.label10 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.Traits_Box = new System.Windows.Forms.TextBox();
-			this.Talents_Box = new System.Windows.Forms.TextBox();
-			this.Skills_Box = new System.Windows.Forms.TextBox();
+			this.tabControl2 = new System.Windows.Forms.TabControl();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.tabPage4 = new System.Windows.Forms.TabPage();
+			this.Powers_Button = new System.Windows.Forms.Button();
+			this.Export_Button = new System.Windows.Forms.Button();
+			this.Reset_Button = new System.Windows.Forms.Button();
+			this.PsyRating = new System.Windows.Forms.Label();
+			this.label11 = new System.Windows.Forms.Label();
+			this.Traits_Box = new System.Windows.Forms.RichTextBox();
+			this.Skills_Box = new System.Windows.Forms.RichTextBox();
+			this.MinorPower_Box = new System.Windows.Forms.RichTextBox();
+			this.MajorPower_Box = new System.Windows.Forms.RichTextBox();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
-			this.tabPage2.SuspendLayout();
 			this.tabPage3.SuspendLayout();
+			this.tabControl2.SuspendLayout();
+			this.tabPage2.SuspendLayout();
+			this.tabPage4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// groupBox1
@@ -90,14 +100,31 @@
 			this.groupBox1.Controls.Add(this.WS_Box);
 			this.groupBox1.Location = new System.Drawing.Point(12, 57);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(131, 267);
+			this.groupBox1.Size = new System.Drawing.Size(156, 267);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Characteristics";
 			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(7, 244);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(47, 13);
+			this.label10.TabIndex = 19;
+			this.label10.Text = "Wounds";
+			// 
+			// Wounds_Box
+			// 
+			this.Wounds_Box.Location = new System.Drawing.Point(106, 241);
+			this.Wounds_Box.Name = "Wounds_Box";
+			this.Wounds_Box.ReadOnly = true;
+			this.Wounds_Box.Size = new System.Drawing.Size(44, 20);
+			this.Wounds_Box.TabIndex = 18;
+			// 
 			// Fel_Box
 			// 
-			this.Fel_Box.Location = new System.Drawing.Point(81, 216);
+			this.Fel_Box.Location = new System.Drawing.Point(106, 216);
 			this.Fel_Box.Name = "Fel_Box";
 			this.Fel_Box.ReadOnly = true;
 			this.Fel_Box.Size = new System.Drawing.Size(44, 20);
@@ -105,7 +132,7 @@
 			// 
 			// Wp_Box
 			// 
-			this.Wp_Box.Location = new System.Drawing.Point(81, 191);
+			this.Wp_Box.Location = new System.Drawing.Point(106, 191);
 			this.Wp_Box.Name = "Wp_Box";
 			this.Wp_Box.ReadOnly = true;
 			this.Wp_Box.Size = new System.Drawing.Size(44, 20);
@@ -113,7 +140,7 @@
 			// 
 			// Per_Box
 			// 
-			this.Per_Box.Location = new System.Drawing.Point(81, 166);
+			this.Per_Box.Location = new System.Drawing.Point(106, 166);
 			this.Per_Box.Name = "Per_Box";
 			this.Per_Box.ReadOnly = true;
 			this.Per_Box.Size = new System.Drawing.Size(44, 20);
@@ -121,7 +148,7 @@
 			// 
 			// Int_Box
 			// 
-			this.Int_Box.Location = new System.Drawing.Point(81, 141);
+			this.Int_Box.Location = new System.Drawing.Point(106, 141);
 			this.Int_Box.Name = "Int_Box";
 			this.Int_Box.ReadOnly = true;
 			this.Int_Box.Size = new System.Drawing.Size(44, 20);
@@ -129,7 +156,7 @@
 			// 
 			// Ag_Box
 			// 
-			this.Ag_Box.Location = new System.Drawing.Point(81, 116);
+			this.Ag_Box.Location = new System.Drawing.Point(106, 116);
 			this.Ag_Box.Name = "Ag_Box";
 			this.Ag_Box.ReadOnly = true;
 			this.Ag_Box.Size = new System.Drawing.Size(44, 20);
@@ -137,7 +164,7 @@
 			// 
 			// T_Box
 			// 
-			this.T_Box.Location = new System.Drawing.Point(81, 91);
+			this.T_Box.Location = new System.Drawing.Point(106, 91);
 			this.T_Box.Name = "T_Box";
 			this.T_Box.ReadOnly = true;
 			this.T_Box.Size = new System.Drawing.Size(44, 20);
@@ -145,7 +172,7 @@
 			// 
 			// S_Box
 			// 
-			this.S_Box.Location = new System.Drawing.Point(81, 66);
+			this.S_Box.Location = new System.Drawing.Point(106, 66);
 			this.S_Box.Name = "S_Box";
 			this.S_Box.ReadOnly = true;
 			this.S_Box.Size = new System.Drawing.Size(44, 20);
@@ -225,7 +252,7 @@
 			// 
 			// BS_Box
 			// 
-			this.BS_Box.Location = new System.Drawing.Point(81, 41);
+			this.BS_Box.Location = new System.Drawing.Point(106, 41);
 			this.BS_Box.Name = "BS_Box";
 			this.BS_Box.ReadOnly = true;
 			this.BS_Box.Size = new System.Drawing.Size(44, 20);
@@ -242,7 +269,7 @@
 			// 
 			// WS_Box
 			// 
-			this.WS_Box.Location = new System.Drawing.Point(81, 16);
+			this.WS_Box.Location = new System.Drawing.Point(106, 16);
 			this.WS_Box.Name = "WS_Box";
 			this.WS_Box.ReadOnly = true;
 			this.WS_Box.Size = new System.Drawing.Size(44, 20);
@@ -253,7 +280,7 @@
 			this.Binding_comboBox.FormattingEnabled = true;
 			this.Binding_comboBox.Location = new System.Drawing.Point(4, 18);
 			this.Binding_comboBox.Name = "Binding_comboBox";
-			this.Binding_comboBox.Size = new System.Drawing.Size(121, 21);
+			this.Binding_comboBox.Size = new System.Drawing.Size(146, 21);
 			this.Binding_comboBox.TabIndex = 1;
 			this.Binding_comboBox.SelectedIndexChanged += new System.EventHandler(this.Binding_comboBox_SelectedIndexChanged);
 			// 
@@ -262,37 +289,19 @@
 			this.groupBox2.Controls.Add(this.Binding_comboBox);
 			this.groupBox2.Location = new System.Drawing.Point(12, 6);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(131, 45);
+			this.groupBox2.Size = new System.Drawing.Size(156, 45);
 			this.groupBox2.TabIndex = 2;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Binding";
 			// 
-			// Wounds_Box
-			// 
-			this.Wounds_Box.Location = new System.Drawing.Point(81, 241);
-			this.Wounds_Box.Name = "Wounds_Box";
-			this.Wounds_Box.ReadOnly = true;
-			this.Wounds_Box.Size = new System.Drawing.Size(44, 20);
-			this.Wounds_Box.TabIndex = 18;
-			// 
-			// label10
-			// 
-			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(7, 244);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(47, 13);
-			this.label10.TabIndex = 19;
-			this.label10.Text = "Wounds";
-			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
-			this.tabControl1.Location = new System.Drawing.Point(150, 13);
+			this.tabControl1.Location = new System.Drawing.Point(183, 6);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(200, 155);
+			this.tabControl1.Size = new System.Drawing.Size(374, 155);
 			this.tabControl1.TabIndex = 3;
 			// 
 			// tabPage1
@@ -302,20 +311,9 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(192, 129);
+			this.tabPage1.Size = new System.Drawing.Size(366, 129);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Traits";
-			// 
-			// tabPage2
-			// 
-			this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
-			this.tabPage2.Controls.Add(this.Talents_Box);
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(192, 129);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Talents";
 			// 
 			// tabPage3
 			// 
@@ -323,45 +321,140 @@
 			this.tabPage3.Controls.Add(this.Skills_Box);
 			this.tabPage3.Location = new System.Drawing.Point(4, 22);
 			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(192, 129);
+			this.tabPage3.Size = new System.Drawing.Size(366, 129);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Skills";
 			// 
+			// tabControl2
+			// 
+			this.tabControl2.Controls.Add(this.tabPage2);
+			this.tabControl2.Controls.Add(this.tabPage4);
+			this.tabControl2.Location = new System.Drawing.Point(183, 187);
+			this.tabControl2.Name = "tabControl2";
+			this.tabControl2.SelectedIndex = 0;
+			this.tabControl2.Size = new System.Drawing.Size(374, 155);
+			this.tabControl2.TabIndex = 4;
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+			this.tabPage2.Controls.Add(this.MinorPower_Box);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(366, 129);
+			this.tabPage2.TabIndex = 0;
+			this.tabPage2.Text = "Minor Powers";
+			// 
+			// tabPage4
+			// 
+			this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+			this.tabPage4.Controls.Add(this.MajorPower_Box);
+			this.tabPage4.Location = new System.Drawing.Point(4, 22);
+			this.tabPage4.Name = "tabPage4";
+			this.tabPage4.Size = new System.Drawing.Size(366, 129);
+			this.tabPage4.TabIndex = 2;
+			this.tabPage4.Text = "Major Powers";
+			// 
+			// Powers_Button
+			// 
+			this.Powers_Button.Location = new System.Drawing.Point(331, 349);
+			this.Powers_Button.Name = "Powers_Button";
+			this.Powers_Button.Size = new System.Drawing.Size(107, 23);
+			this.Powers_Button.TabIndex = 5;
+			this.Powers_Button.Text = "Generate Powers";
+			this.Powers_Button.UseVisualStyleBackColor = true;
+			this.Powers_Button.Click += new System.EventHandler(this.Powers_Button_Click);
+			// 
+			// Export_Button
+			// 
+			this.Export_Button.Location = new System.Drawing.Point(12, 349);
+			this.Export_Button.Name = "Export_Button";
+			this.Export_Button.Size = new System.Drawing.Size(75, 23);
+			this.Export_Button.TabIndex = 6;
+			this.Export_Button.Text = "Export";
+			this.Export_Button.UseVisualStyleBackColor = true;
+			this.Export_Button.Click += new System.EventHandler(this.Export_Button_Click);
+			// 
+			// Reset_Button
+			// 
+			this.Reset_Button.Location = new System.Drawing.Point(93, 348);
+			this.Reset_Button.Name = "Reset_Button";
+			this.Reset_Button.Size = new System.Drawing.Size(75, 23);
+			this.Reset_Button.TabIndex = 7;
+			this.Reset_Button.Text = "Reset";
+			this.Reset_Button.UseVisualStyleBackColor = true;
+			this.Reset_Button.Click += new System.EventHandler(this.Reset_Button_Click);
+			// 
+			// PsyRating
+			// 
+			this.PsyRating.AutoSize = true;
+			this.PsyRating.Location = new System.Drawing.Point(244, 171);
+			this.PsyRating.Name = "PsyRating";
+			this.PsyRating.Size = new System.Drawing.Size(13, 13);
+			this.PsyRating.TabIndex = 11;
+			this.PsyRating.Text = "0";
+			// 
+			// label11
+			// 
+			this.label11.AutoSize = true;
+			this.label11.Location = new System.Drawing.Point(180, 171);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(61, 13);
+			this.label11.TabIndex = 10;
+			this.label11.Text = "Psy-Rating:\r\n";
+			// 
 			// Traits_Box
 			// 
-			this.Traits_Box.Location = new System.Drawing.Point(6, 6);
-			this.Traits_Box.Multiline = true;
+			this.Traits_Box.BackColor = System.Drawing.SystemColors.Control;
+			this.Traits_Box.Location = new System.Drawing.Point(0, 0);
 			this.Traits_Box.Name = "Traits_Box";
-			this.Traits_Box.ReadOnly = true;
-			this.Traits_Box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Traits_Box.Size = new System.Drawing.Size(180, 117);
-			this.Traits_Box.TabIndex = 20;
-			// 
-			// Talents_Box
-			// 
-			this.Talents_Box.Location = new System.Drawing.Point(6, 6);
-			this.Talents_Box.Multiline = true;
-			this.Talents_Box.Name = "Talents_Box";
-			this.Talents_Box.ReadOnly = true;
-			this.Talents_Box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Talents_Box.Size = new System.Drawing.Size(180, 117);
-			this.Talents_Box.TabIndex = 21;
+			this.Traits_Box.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+			this.Traits_Box.Size = new System.Drawing.Size(366, 129);
+			this.Traits_Box.TabIndex = 0;
+			this.Traits_Box.Text = "";
 			// 
 			// Skills_Box
 			// 
-			this.Skills_Box.Location = new System.Drawing.Point(6, 6);
-			this.Skills_Box.Multiline = true;
+			this.Skills_Box.BackColor = System.Drawing.SystemColors.Control;
+			this.Skills_Box.Location = new System.Drawing.Point(0, 0);
 			this.Skills_Box.Name = "Skills_Box";
-			this.Skills_Box.ReadOnly = true;
-			this.Skills_Box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Skills_Box.Size = new System.Drawing.Size(180, 117);
-			this.Skills_Box.TabIndex = 21;
+			this.Skills_Box.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+			this.Skills_Box.Size = new System.Drawing.Size(363, 129);
+			this.Skills_Box.TabIndex = 1;
+			this.Skills_Box.Text = "";
+			// 
+			// MinorPower_Box
+			// 
+			this.MinorPower_Box.BackColor = System.Drawing.SystemColors.Control;
+			this.MinorPower_Box.Location = new System.Drawing.Point(0, 0);
+			this.MinorPower_Box.Name = "MinorPower_Box";
+			this.MinorPower_Box.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+			this.MinorPower_Box.Size = new System.Drawing.Size(363, 129);
+			this.MinorPower_Box.TabIndex = 1;
+			this.MinorPower_Box.Text = "";
+			// 
+			// MajorPower_Box
+			// 
+			this.MajorPower_Box.BackColor = System.Drawing.SystemColors.Control;
+			this.MajorPower_Box.Location = new System.Drawing.Point(0, 0);
+			this.MajorPower_Box.Name = "MajorPower_Box";
+			this.MajorPower_Box.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+			this.MajorPower_Box.Size = new System.Drawing.Size(363, 129);
+			this.MajorPower_Box.TabIndex = 1;
+			this.MajorPower_Box.Text = "";
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(384, 356);
+			this.ClientSize = new System.Drawing.Size(569, 384);
+			this.Controls.Add(this.PsyRating);
+			this.Controls.Add(this.label11);
+			this.Controls.Add(this.Reset_Button);
+			this.Controls.Add(this.Export_Button);
+			this.Controls.Add(this.Powers_Button);
+			this.Controls.Add(this.tabControl2);
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
@@ -372,12 +465,12 @@
 			this.groupBox2.ResumeLayout(false);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
-			this.tabPage1.PerformLayout();
-			this.tabPage2.ResumeLayout(false);
-			this.tabPage2.PerformLayout();
 			this.tabPage3.ResumeLayout(false);
-			this.tabPage3.PerformLayout();
+			this.tabControl2.ResumeLayout(false);
+			this.tabPage2.ResumeLayout(false);
+			this.tabPage4.ResumeLayout(false);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -408,11 +501,19 @@
 		private System.Windows.Forms.TextBox Wounds_Box;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
-		private System.Windows.Forms.TextBox Traits_Box;
-		private System.Windows.Forms.TabPage tabPage2;
-		private System.Windows.Forms.TextBox Talents_Box;
 		private System.Windows.Forms.TabPage tabPage3;
-		private System.Windows.Forms.TextBox Skills_Box;
+		private System.Windows.Forms.TabControl tabControl2;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.TabPage tabPage4;
+		private System.Windows.Forms.Button Powers_Button;
+		private System.Windows.Forms.Button Export_Button;
+		private System.Windows.Forms.Button Reset_Button;
+		private System.Windows.Forms.Label PsyRating;
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.RichTextBox Traits_Box;
+		private System.Windows.Forms.RichTextBox Skills_Box;
+		private System.Windows.Forms.RichTextBox MinorPower_Box;
+		private System.Windows.Forms.RichTextBox MajorPower_Box;
 	}
 }
 
