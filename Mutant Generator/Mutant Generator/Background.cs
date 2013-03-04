@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Dark_Heresy_Generator
 {
+	[Serializable()]
 	class Background
 	{
 		public string Name { get; set; }

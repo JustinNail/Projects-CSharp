@@ -149,6 +149,7 @@
 			this.Random_Button = new System.Windows.Forms.Button();
 			this.Eye_Box = new System.Windows.Forms.TextBox();
 			this.Appearance_Button = new System.Windows.Forms.Button();
+			this.Save_Button = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -1386,11 +1387,22 @@
 			this.Appearance_Button.UseVisualStyleBackColor = true;
 			this.Appearance_Button.Click += new System.EventHandler(this.Appearance_Button_Click);
 			// 
+			// Save_Button
+			// 
+			this.Save_Button.Location = new System.Drawing.Point(94, 418);
+			this.Save_Button.Name = "Save_Button";
+			this.Save_Button.Size = new System.Drawing.Size(75, 23);
+			this.Save_Button.TabIndex = 88;
+			this.Save_Button.Text = "Save";
+			this.Save_Button.UseVisualStyleBackColor = true;
+			this.Save_Button.Click += new System.EventHandler(this.Save_Button_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(797, 447);
+			this.Controls.Add(this.Save_Button);
 			this.Controls.Add(this.Appearance_Button);
 			this.Controls.Add(this.Eye_Box);
 			this.Controls.Add(this.Random_Button);
@@ -1570,6 +1582,7 @@
 		private System.Windows.Forms.Button Random_Button;
 		private System.Windows.Forms.TextBox Eye_Box;
 		private System.Windows.Forms.Button Appearance_Button;
+		private System.Windows.Forms.Button Save_Button;
 	}
 }
 

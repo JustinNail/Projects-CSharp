@@ -5,47 +5,52 @@ using System.Text;
 
 namespace Dark_Heresy_Generator
 {
-	static class DHCharacter
+	[Serializable()]
+	class DHCharacter
 	{
-		public static Stat WS = new Stat(0, 0);
-		public static Stat BS = new Stat(0, 0);
-		public static Stat S = new Stat(0, 0);
-		public static Stat T = new Stat(0, 0);
-		public static Stat Ag = new Stat(0, 0);
-		public static Stat Int = new Stat(0, 0);
-		public static Stat Per = new Stat(0, 0);
-		public static Stat Wp = new Stat(0, 0);
-		public static Stat Fel = new Stat(0, 0);
+		public Stat WS = new Stat(0, 0);
+		public Stat BS = new Stat(0, 0);
+		public Stat S = new Stat(0, 0);
+		public Stat T = new Stat(0, 0);
+		public Stat Ag = new Stat(0, 0);
+		public Stat Int = new Stat(0, 0);
+		public Stat Per = new Stat(0, 0);
+		public Stat Wp = new Stat(0, 0);
+		public Stat Fel = new Stat(0, 0);
 
-		public static int Wounds { get; set; }
-		public static int Fate { get; set; }
-		public static int Insanity { get; set; }
-		public static int Corruption { get; set; }
+		public int XP_Spent { get; set; }
 
-		public static Origin Origin = new Origin("","");
-		public static Career Career = new Career("","");
-		public static Background Background = new Background("","");
+		public List<Rank> Ranks = new List<Rank>();
 
-		public static List<Trait> Traits = new List<Trait>();
-		public static List<Skill> Skills = new List<Skill>();
-		public static List<Talent> Talents = new List<Talent>();
-		public static List<Equipment> Gear = new List<Equipment>();
+		public int Wounds { get; set; }
+		public int Fate { get; set; }
+		public int Insanity { get; set; }
+		public int Corruption { get; set; }
 
-		public static int Thrones { get; set; }
-		public static string Income { get; set; }
+		public Origin Origin = new Origin("","");
+		public Career Career = new Career("","");
+		public Background Background = new Background("","");
 
-		public static string Name { get; set; }
-		public static string NameType { get; set; }
-		public static string Sex { get; set; }
-		public static string Build { get; set; }
-		public static string Age { get; set; }
-		public static string Skin { get; set; }
-		public static string Hair { get; set; }
-		public static string Eye { get; set; }
-		public static string Quirk { get; set; }
-		public static string Bio { get; set; }
+		public List<Trait> Traits = new List<Trait>();
+		public List<Skill> Skills = new List<Skill>();
+		public List<Talent> Talents = new List<Talent>();
+		public List<Equipment> Gear = new List<Equipment>();
 
-		public static void Reset()
+		public int Thrones { get; set; }
+		public string Income { get; set; }
+		
+		public string Name { get; set; }
+		public string NameType { get; set; }
+		public string Sex { get; set; }
+		public string Build { get; set; }
+		public string Age { get; set; }
+		public string Skin { get; set; }
+		public string Hair { get; set; }
+		public string Eye { get; set; }
+		public string Quirk { get; set; }
+		public string Bio { get; set; }
+
+		public void Reset()
 		{
 			WS.Reset();
 			BS.Reset();
