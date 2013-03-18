@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Advance.cs" />
     <Compile Include="Background.cs" />
     <Compile Include="Career.cs" />
     <Compile Include="DHCharacter.cs" />
@@ -59,6 +61,7 @@
     <Compile Include="Origin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rank.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="Stat.cs" />
     <Compile Include="Talent.cs" />

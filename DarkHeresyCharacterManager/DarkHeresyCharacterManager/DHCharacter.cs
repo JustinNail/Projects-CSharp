@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DarkHeresyCharacterManager
+namespace DarkHeresyCharacter
 {
 	[Serializable()]
-	class DHCharacter
+	public class DHCharacter
 	{
 		public Stat WS = new Stat(0, 0);
 		public Stat BS = new Stat(0, 0);
@@ -18,14 +18,20 @@ namespace DarkHeresyCharacterManager
 		public Stat Wp = new Stat(0, 0);
 		public Stat Fel = new Stat(0, 0);
 
+		public int XP_Spent { get; set; }
+
+		public List<Rank> Ranks = new List<Rank>();
+
 		public int Wounds { get; set; }
+		public int CurWounds { get; set; }
 		public int Fate { get; set; }
+		public int CurFate { get; set; }
 		public int Insanity { get; set; }
 		public int Corruption { get; set; }
 
 		public Origin Origin = new Origin("","");
 		public Career Career = new Career("","");
-		public Background Background = new Background("","");
+		public Background Background = new Background("",0);
 
 		public List<Trait> Traits = new List<Trait>();
 		public List<Skill> Skills = new List<Skill>();
@@ -58,8 +64,12 @@ namespace DarkHeresyCharacterManager
 			Wp.Reset();
 			Fel.Reset();
 
+			XP_Spent = 0;
+
 			Wounds = 0;
+			CurWounds = 0;
 			Fate = 0;
+			CurFate = 0;
 			Insanity = 0;
 			Corruption = 0;
 

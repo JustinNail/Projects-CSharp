@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DarkHeresyCharacterManager
+namespace DarkHeresyCharacter
 {
 	[Serializable()]
-	class Talent
+	public class Talent
 	{
 		public string Name { get; set; }
 		public string Source { get; set; }
 
+		public Talent()
+		{
+			Name = "";
+			Source = "";
+		}
 		public Talent(string n, string s)
 		{
 			Name = n;
