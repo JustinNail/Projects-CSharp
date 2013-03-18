@@ -83,15 +83,15 @@ namespace Dark_Heresy_Generator
 		private void Fill_Base_Stats()
 		{
 			XElement origin = GetOrigin();
-			Character.WS.Base = int.Parse(origin.Element("basestats").Element("WS").Value);
-			Character.BS.Base = int.Parse(origin.Element("basestats").Element("BS").Value);
-			Character.S.Base = int.Parse(origin.Element("basestats").Element("S").Value);
-			Character.T.Base = int.Parse(origin.Element("basestats").Element("T").Value);
-			Character.Ag.Base = int.Parse(origin.Element("basestats").Element("Ag").Value);
-			Character.Int.Base = int.Parse(origin.Element("basestats").Element("Int").Value);
-			Character.Per.Base = int.Parse(origin.Element("basestats").Element("Per").Value);
-			Character.Wp.Base = int.Parse(origin.Element("basestats").Element("Wp").Value);
-			Character.Fel.Base = int.Parse(origin.Element("basestats").Element("Fel").Value);
+			Character.WS.OriginBase = int.Parse(origin.Element("basestats").Element("WS").Value);
+			Character.BS.OriginBase = int.Parse(origin.Element("basestats").Element("BS").Value);
+			Character.S.OriginBase = int.Parse(origin.Element("basestats").Element("S").Value);
+			Character.T.OriginBase = int.Parse(origin.Element("basestats").Element("T").Value);
+			Character.Ag.OriginBase = int.Parse(origin.Element("basestats").Element("Ag").Value);
+			Character.Int.OriginBase = int.Parse(origin.Element("basestats").Element("Int").Value);
+			Character.Per.OriginBase = int.Parse(origin.Element("basestats").Element("Per").Value);
+			Character.Wp.OriginBase = int.Parse(origin.Element("basestats").Element("Wp").Value);
+			Character.Fel.OriginBase = int.Parse(origin.Element("basestats").Element("Fel").Value);
 		}
 
 		#region Combo Boxes
@@ -308,6 +308,7 @@ namespace Dark_Heresy_Generator
 		}
 		private void Career_comboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			CareerReset();
 			string[] attributes = Career_comboBox.SelectedItem.ToString().Split('(',')');
 			Character.Career.Name = attributes.First();
 			Character.Career.Base = attributes.Last(s=> s != "");
@@ -406,6 +407,7 @@ namespace Dark_Heresy_Generator
 		}
 		private void Background_comboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			BackReset();
 			string[] attributes = Background_comboBox.SelectedItem.ToString().Split(':');
 			Character.Background.Name = attributes.First();
 			string Cost = attributes.Last(s => s != "");
@@ -477,7 +479,8 @@ namespace Dark_Heresy_Generator
 		private void Wound_Roll()
 		{
 			XElement origin = GetOrigin();
-			Character.Wounds=Dice.Next(1, 6) + int.Parse(origin.Element("basestats").Element("Wounds").Value);
+			Character.Wounds.Roll = Dice.Next(1, 6);
+			Character.Wounds.OriginBase= int.Parse(origin.Element("basestats").Element("Wounds").Value);
 		}
 		private void Fate_Roll()
 		{
@@ -488,12 +491,12 @@ namespace Dark_Heresy_Generator
 				if (result >= int.Parse(option.Attribute("lower").Value) &&
 					result <= int.Parse(option.Attribute("upper").Value))
 				{
-					Character.Fate = int.Parse(option.Attribute("amount").Value);
+					Character.Fate.OriginBase = int.Parse(option.Attribute("amount").Value);
 				}
 			}
 		}
 
-		private void Insanity_Roll(int num, int size, int Base)
+		private void Insanity_Roll(int num, int size, int Base, Source source)
 		{
 			int roll=0;
 			for (int i = 0; i < num; i++)
@@ -501,9 +504,20 @@ namespace Dark_Heresy_Generator
 				roll += Dice.Next(1, size + 1);
 			}
 			roll+=Base;
-			Character.Insanity += roll;
+			switch (source)
+			{
+				case Source.Origin:
+					Character.Insanity.OriginBase += roll;
+					break;
+				case Source.Career:
+					Character.Insanity.CareerMod += roll;
+					break;
+				case Source.Background:
+					Character.Insanity.BackMod += roll;
+					break;
+			}
 		}
-		private void Corruption_Roll(int num, int size, int Base)
+		private void Corruption_Roll(int num, int size, int Base, Source source)
 		{
 			int roll = 0;
 			for (int i = 0; i < num; i++)
@@ -511,7 +525,18 @@ namespace Dark_Heresy_Generator
 				roll += Dice.Next(1, size + 1);
 			}
 			roll += Base;
-			Character.Corruption += roll;
+			switch (source)
+			{
+				case Source.Origin:
+					Character.Corruption.OriginBase += roll;
+					break;
+				case Source.Career:
+					Character.Corruption.CareerMod += roll;
+					break;
+				case Source.Background:
+					Character.Corruption.BackMod += roll;
+					break;
+			}
 		}
 
 		private void Divination_Roll()
@@ -525,7 +550,7 @@ namespace Dark_Heresy_Generator
 					DivDel=delegate()
 					{
 						int result = Dice.Next(1,101);
-						MinorMutation(result,"Divination");
+						MinorMutation(result,Source.Divination);
 					};
 					break;
 				case 2: case 3:
@@ -535,7 +560,7 @@ namespace Dark_Heresy_Generator
 					"\nBegin play with 2 Insanity Points.";
 					DivDel = delegate()
 					{
-						Character.Insanity += 2;
+						Character.Insanity.DivMod += 2;
 					};
 					break;
 				case 4: case 5: case 6: case 7:
@@ -544,7 +569,7 @@ namespace Dark_Heresy_Generator
 					"\nBegin play with 3 Corruption Points.";
 					DivDel = delegate()
 					{
-						Character.Corruption += 3;
+						Character.Corruption.DivMod += 3;
 					};
 					break;
 				case 8:
@@ -553,8 +578,8 @@ namespace Dark_Heresy_Generator
 					"\nBegin play with 1 Insanity Point and 1 Corruption Point.";
 					DivDel = delegate()
 					{
-						Character.Insanity += 1;
-						Character.Corruption += 1;
+						Character.Insanity.DivMod += 1;
+						Character.Corruption.DivMod += 1;
 					};
 					break;
 				case 9: case 10: case 11:
@@ -563,7 +588,7 @@ namespace Dark_Heresy_Generator
 					"\nBegin play with 2 Corruption Points.";
 					DivDel = delegate()
 					{
-						Character.Corruption += 2;
+						Character.Corruption.DivMod += 2;
 					};
 					break;
 				case 12: case 13: case 14: case 15:
@@ -572,7 +597,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Toughness by +1.";
 					DivDel = delegate()
 					{
-						Character.T.Base += 1;
+						Character.T.DivMod += 1;
 					};
 					break;
 				case 16: case 17: case 18:
@@ -581,7 +606,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Agility by +2.";
 					DivDel = delegate()
 					{
-						Character.Ag.Base += 2;
+						Character.Ag.DivMod += 2;
 					};
 					break;
 				case 19: case 20: case 21:
@@ -590,8 +615,8 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Intelligence by +3. Begin play with 3 Corruption Points.";
 					DivDel = delegate()
 					{
-						Character.Int.Base += 3;
-						Character.Corruption += 3;
+						Character.Int.DivMod += 3;
+						Character.Corruption.DivMod += 3;
 					};
 					break;
 				case 22: case 23: case 24: case 25: case 26:
@@ -600,7 +625,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Perception by +2.";
 					DivDel = delegate()
 					{
-						Character.Per.Base += 2;
+						Character.Per.DivMod += 2;
 					};
 					break;
 				case 27: case 28: case 29: case 30:
@@ -609,7 +634,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Strength by +2.";
 					DivDel = delegate()
 					{
-						Character.S.Base += 2;
+						Character.S.DivMod += 2;
 					};
 					break;
 				case 31: case 32: case 33:
@@ -618,7 +643,7 @@ namespace Dark_Heresy_Generator
 					"\nGain the Frenzy talent.";
 					DivDel = delegate()
 					{
-						Character.Talents.Add(new Talent("Frenzy","Divination"));
+						Character.Talents.Add(new Talent("Frenzy",Source.Divination));
 					};
 					break;
 				case 34: case 35: case 36: case 37: case 38:
@@ -627,7 +652,7 @@ namespace Dark_Heresy_Generator
 					"\nGain 1 Wound.";
 					DivDel = delegate()
 					{
-						Character.Wounds += 1;
+						Character.Wounds.DivMod += 1;
 					};
 					break;
 				case 39: case 40: case 41: case 42:
@@ -636,7 +661,7 @@ namespace Dark_Heresy_Generator
 					"\nGain 1 Fate Point.";
 					DivDel = delegate()
 					{
-						Character.Fate += 1;
+						Character.Fate.DivMod += 1;
 					};
 					break;
 				case 43: case 44: case 45: case 46:
@@ -645,8 +670,8 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Toughness by +2 and gain 1 Wound.";
 					DivDel = delegate()
 					{
-						Character.T.Base += 2;
-						Character.Wounds += 1;
+						Character.T.DivMod += 2;
+						Character.Wounds.DivMod += 1;
 					};
 					break;
 				case 47: case 48: case 49: case 50:
@@ -655,7 +680,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Weapon Skill by +3.";
 					DivDel = delegate()
 					{
-						Character.WS.Base += 3;
+						Character.WS.DivMod += 3;
 					};
 					break;
 				case 51: case 52: case 53: case 54:
@@ -664,7 +689,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Agility by +3.";
 					DivDel = delegate()
 					{
-						Character.Ag.Base += 3;
+						Character.Ag.DivMod += 3;
 					};
 					break;
 				case 55: case 56: case 57: case 58:
@@ -673,7 +698,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Willpower by +3.";
 					DivDel = delegate()
 					{
-						Character.Wp.Base += 3;
+						Character.Wp.DivMod += 3;
 					};
 					break;
 				case 59: case 60: case 61: case 62:
@@ -682,7 +707,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Ballistic Skill by +3.";
 					DivDel = delegate()
 					{
-						Character.BS.Base += 3;
+						Character.BS.DivMod += 3;
 					};
 					break;
 				case 63: case 64: case 65: case 66:
@@ -691,7 +716,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Fellowship by +3.";
 					DivDel = delegate()
 					{
-						Character.Fel.Base += 3;
+						Character.Fel.DivMod += 3;
 					};
 					break;
 				case 67: case 68: case 69: case 70:
@@ -700,7 +725,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Toughness by +3.";
 					DivDel = delegate()
 					{
-						Character.T.Base += 3;
+						Character.T.DivMod += 3;
 					};
 					break;
 				case 71: case 72: case 73: case 74:
@@ -709,7 +734,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Willpower by +3.";
 					DivDel = delegate()
 					{
-						Character.Wp.Base += 3;
+						Character.Wp.DivMod += 3;
 					};
 					break;
 				case 75: case 76: case 77: case 78: case 79:
@@ -718,7 +743,7 @@ namespace Dark_Heresy_Generator
 					"\nGain 2 Wounds.";
 					DivDel = delegate()
 					{
-						Character.Wounds += 2;
+						Character.Wounds.DivMod += 2;
 					};
 					break;
 				case 80: case 81: case 82: case 83: case 84: case 85:
@@ -727,7 +752,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Strength by +3.";
 					DivDel = delegate()
 					{
-						Character.S.Base += 3;
+						Character.S.DivMod += 3;
 					};
 					break;
 				case 86: case 87: case 88: case 89: case 90:
@@ -736,7 +761,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Intelligence by +3.";
 					DivDel = delegate()
 					{
-						Character.Int.Base += 3;
+						Character.Int.DivMod += 3;
 					};
 					break;
 				case 91: case 92: case 93: case 94:
@@ -745,7 +770,7 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Perception by +3.";
 					DivDel = delegate()
 					{
-						Character.Per.Base += 3;
+						Character.Per.DivMod += 3;
 					};
 					break;
 				case 95: case 96: case 97:
@@ -754,8 +779,8 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Agility by +2 and gain 1 Fate Point.";
 					DivDel = delegate()
 					{
-						Character.Ag.Base += 2;
-						Character.Fate += 1;
+						Character.Ag.DivMod += 2;
+						Character.Fate.DivMod += 1;
 					};
 					break;
 				case 98: case 99:
@@ -764,8 +789,8 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Toughness and Willpower each by +2.";
 					DivDel = delegate()
 					{
-						Character.T.Base += 2;
-						Character.Wp.Base += 2;
+						Character.T.DivMod += 2;
+						Character.Wp.DivMod += 2;
 					};
 					break;
 				case 100:
@@ -774,8 +799,8 @@ namespace Dark_Heresy_Generator
 					"\nIncrease Weapon Skill and Ballistic Skill each by +2.";
 					DivDel = delegate()
 					{
-						Character.WS.Base += 2;
-						Character.BS.Base += 2;
+						Character.WS.DivMod += 2;
+						Character.BS.DivMod += 2;
 					};
 					break;
 			}
@@ -1199,11 +1224,39 @@ namespace Dark_Heresy_Generator
 				}
 				DialogBoxList SkillDialog = new DialogBoxList(SkillList);
 				SkillDialog.ShowDialog();
-				Character.Skills.Add(new Skill(SkillDialog.selection, skill.Parent.Parent.Name.LocalName));
+				switch(skill.Parent.Parent.Name.LocalName)
+				{
+					case "origin":
+						Character.Skills.Add(new Skill(SkillDialog.selection, Source.Origin));
+						break;
+					case "career":
+						Character.Skills.Add(new Skill(SkillDialog.selection, Source.Career));
+						break;
+					case "background":
+						Character.Skills.Add(new Skill(SkillDialog.selection, Source.Background));
+						break;
+					case "divination":
+						Character.Skills.Add(new Skill(SkillDialog.selection, Source.Divination));
+						break;
+				}
 			}
 			else
 			{
-				Character.Skills.Add(new Skill(skill.Attribute("choice").Value, skill.Parent.Parent.Name.LocalName));
+				switch (skill.Parent.Parent.Name.LocalName)
+				{
+					case "origin":
+						Character.Skills.Add(new Skill(skill.Attribute("choice").Value, Source.Origin));
+						break;
+					case "career":
+						Character.Skills.Add(new Skill(skill.Attribute("choice").Value, Source.Career));
+						break;
+					case "background":
+						Character.Skills.Add(new Skill(skill.Attribute("choice").Value, Source.Background));
+						break;
+					case "divination":
+						Character.Skills.Add(new Skill(skill.Attribute("choice").Value, Source.Divination));
+						break;
+				}
 			}
 		}
 		private void Add_Talent(XElement talent)
@@ -1217,22 +1270,64 @@ namespace Dark_Heresy_Generator
 				}
 				DialogBoxList TalentDialog = new DialogBoxList(TalentList);
 				TalentDialog.ShowDialog();
-				Character.Talents.Add(new Talent(TalentDialog.selection, talent.Parent.Parent.Name.LocalName));
+				switch(talent.Parent.Parent.Name.LocalName)
+				{
+					case "origin":
+						Character.Talents.Add(new Talent(TalentDialog.selection, Source.Origin));
+						break;
+					case "career":
+						Character.Talents.Add(new Talent(TalentDialog.selection, Source.Career));
+						break;
+					case "background":
+						Character.Talents.Add(new Talent(TalentDialog.selection, Source.Background));
+						break;
+					case "divination":
+						Character.Talents.Add(new Talent(TalentDialog.selection, Source.Divination));
+						break;
+				}
 			}
 			else
 			{
-				Character.Talents.Add(new Talent(talent.Attribute("choice").Value, talent.Parent.Parent.Name.LocalName));
+				switch (talent.Parent.Parent.Name.LocalName)
+				{
+					case "origin":
+						Character.Talents.Add(new Talent(talent.Attribute("choice").Value, Source.Origin));
+						break;
+					case "career":
+						Character.Talents.Add(new Talent(talent.Attribute("choice").Value, Source.Career));
+						break;
+					case "background":
+						Character.Talents.Add(new Talent(talent.Attribute("choice").Value, Source.Background));
+						break;
+					case "divination":
+						Character.Talents.Add(new Talent(talent.Attribute("choice").Value, Source.Divination));
+						break;
+				}
 			}
 		}
 		private void Add_Trait(XElement trait)
 		{
-			Character.Traits.Add(new Trait(trait.Attribute("name").Value,trait.Attribute("effect").Value,
-				trait.Parent.Parent.Name.LocalName));
+			switch(trait.Parent.Parent.Name.LocalName)
+			{
+				case "background":
+					Character.Traits.Add(new Trait(trait.Attribute("name").Value,trait.Attribute("effect").Value,
+						Source.Background));
+					break;
+				case "origin":
+					Character.Traits.Add(new Trait(trait.Attribute("name").Value,trait.Attribute("effect").Value,
+						Source.Origin));
+					break;
+				case "career":
+					Character.Traits.Add(new Trait(trait.Attribute("name").Value,trait.Attribute("effect").Value,
+						Source.Career));
+					break;
+			}
 			if (trait.Attribute("name").Value == "Sanctioned Psyker")
 			{
 				string SideEffect = SanctioningSideEffects();
 				Character.Traits.Add(new Trait("Sanctioning Side Effect:", SideEffect, 
-					trait.Parent.Parent.Name.LocalName));
+					Source.Career));
+				
 			}
 			if (trait.Attribute("name").Value == "Twist")
 			{
@@ -1262,34 +1357,34 @@ namespace Dark_Heresy_Generator
 						switch (MutationDialog.selection)
 						{
 							case ("Grotesque"):
-								MinorMutation(1, "Origin");
+								MinorMutation(1, Source.Origin);
 								break;
 							case("Tough Hide"):
-								MinorMutation(21, "Origin");
+								MinorMutation(21, Source.Origin);
 								break;
 							case("Misshapen"):
-								MinorMutation(31, "Origin");
+								MinorMutation(31, Source.Origin);
 								break;
 							case("Feels No Pain"):
-								MinorMutation(41, "Origin");
+								MinorMutation(41, Source.Origin);
 								break;
 							case("Brute"):
-								MinorMutation(51, "Origin");
+								MinorMutation(51, Source.Origin);
 								break;
 							case("Nightsider"):
-								MinorMutation(61, "Origin");
+								MinorMutation(61, Source.Origin);
 								break;
 							case("Big Eyes"):
-								MinorMutation(71, "Origin");
+								MinorMutation(71, Source.Origin);
 								break;
 							case("Malformed Hands"):
-								MinorMutation(81, "Origin");
+								MinorMutation(81, Source.Origin);
 								break;
 							case("Tox Blood"):
-								MinorMutation(86, "Origin");
+								MinorMutation(86, Source.Origin);
 								break;
 							case("Wyrdling"):
-								MinorMutation(90, "Origin");
+								MinorMutation(90, Source.Origin);
 								break;
 						}
 						List<string> list1 = new List<string>();
@@ -1315,41 +1410,41 @@ namespace Dark_Heresy_Generator
 						switch (MutationDialog1.selection)
 						{
 							case ("Grotesque"):
-								MinorMutation(1, "Origin");
+								MinorMutation(1, Source.Origin);
 								break;
 							case ("Tough Hide"):
-								MinorMutation(21, "Origin");
+								MinorMutation(21, Source.Origin);
 								break;
 							case ("Misshapen"):
-								MinorMutation(31, "Origin");
+								MinorMutation(31, Source.Origin);
 								break;
 							case ("Feels No Pain"):
-								MinorMutation(41, "Origin");
+								MinorMutation(41, Source.Origin);
 								break;
 							case ("Brute"):
-								MinorMutation(51, "Origin");
+								MinorMutation(51, Source.Origin);
 								break;
 							case ("Nightsider"):
-								MinorMutation(61, "Origin");
+								MinorMutation(61, Source.Origin);
 								break;
 							case ("Big Eyes"):
-								MinorMutation(71, "Origin");
+								MinorMutation(71, Source.Origin);
 								break;
 							case ("Malformed Hands"):
-								MinorMutation(81, "Origin");
+								MinorMutation(81, Source.Origin);
 								break;
 							case ("Tox Blood"):
-								MinorMutation(86, "Origin");
+								MinorMutation(86, Source.Origin);
 								break;
 							case ("Wyrdling"):
-								MinorMutation(90, "Origin");
+								MinorMutation(90, Source.Origin);
 								break;
 						}
 					#endregion
 						break;
 					case "1 random Minor, and 1 random Major Mutation":
-						MinorMutation(Dice.Next(1, 101),"Origin");
-						MajorMutation(Dice.Next(1, 101),"Origin");
+						MinorMutation(Dice.Next(1, 101),Source.Origin);
+						MajorMutation(Dice.Next(1, 101), Source.Origin);
 						break;
 				}				
 				#endregion
@@ -1374,11 +1469,33 @@ namespace Dark_Heresy_Generator
 				}
 				DialogBoxList EquipDialog = new DialogBoxList(EquipList);
 				EquipDialog.ShowDialog();
-				Character.Gear.Add(new Equipment(EquipDialog.selection, equip.Parent.Parent.Name.LocalName));
+				switch(equip.Parent.Parent.Name.LocalName)
+				{
+					case "background":
+						Character.Gear.Add(new Equipment(EquipDialog.selection, Source.Background));
+						break;
+					case "career":
+						Character.Gear.Add(new Equipment(EquipDialog.selection, Source.Career));
+						break;
+					case "origin":
+						Character.Gear.Add(new Equipment(EquipDialog.selection, Source.Origin));
+						break;
+				}
 			}
 			else
 			{
-				Character.Gear.Add(new Equipment(equip.Attribute("choice").Value, equip.Parent.Parent.Name.LocalName));
+				switch (equip.Parent.Parent.Name.LocalName)
+				{
+					case "background":
+						Character.Gear.Add(new Equipment(equip.Attribute("choice").Value, Source.Background));
+						break;
+					case "career":
+						Character.Gear.Add(new Equipment(equip.Attribute("choice").Value, Source.Career));
+						break;
+					case "origin":
+						Character.Gear.Add(new Equipment(equip.Attribute("choice").Value, Source.Origin));
+						break;
+				}
 			}
 		}
 		#endregion
@@ -1417,7 +1534,7 @@ namespace Dark_Heresy_Generator
 				int num = int.Parse(points.Attribute("num").Value);
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
-				Insanity_Roll(num,size,Base);
+				Insanity_Roll(num,size,Base,Source.Origin);
 			}
 		}
 		private void Add_Origin_Corruption()
@@ -1428,7 +1545,7 @@ namespace Dark_Heresy_Generator
 				int num = int.Parse(points.Attribute("num").Value);
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
-				Corruption_Roll(num, size, Base);
+				Corruption_Roll(num, size, Base, Source.Origin);
 				if (points.Attributes().Count() > 3)
 				{
 					var query = from mal in points.Attributes()
@@ -1436,7 +1553,7 @@ namespace Dark_Heresy_Generator
 								select mal.Value;
 					if (query.ElementAt(0) == "true")
 					{
-						Malignancy();
+						Malignancy(Source.Origin);
 					}
 				}
 			}
@@ -1598,7 +1715,7 @@ namespace Dark_Heresy_Generator
 				int num = int.Parse(points.Attribute("num").Value);
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
-				Insanity_Roll(num, size, Base);
+				Insanity_Roll(num, size, Base, Source.Career);
 			}
 		}
 		private void Add_Career_Corruption()
@@ -1609,7 +1726,7 @@ namespace Dark_Heresy_Generator
 				int num = int.Parse(points.Attribute("num").Value);
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
-				Corruption_Roll(num, size, Base);
+				Corruption_Roll(num, size, Base, Source.Career);
 				if (points.Attributes().Count() > 3)
 				{
 					var query = from mal in points.Attributes()
@@ -1617,7 +1734,7 @@ namespace Dark_Heresy_Generator
 								select mal.Value;
 					if (query.ElementAt(0) == "true")
 					{
-						Malignancy();
+						Malignancy(Source.Career);
 					}
 				}
 			}
@@ -1667,7 +1784,7 @@ namespace Dark_Heresy_Generator
 						break;
 				}
 			}
-			Character.Thrones += thrones;
+			Character.Thrones = thrones;
 		}
 		#endregion
 
@@ -1701,34 +1818,34 @@ namespace Dark_Heresy_Generator
 				switch (choice)
 				{
 					case "WS":
-						Character.WS.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.WS.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "BS":
-						Character.BS.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.BS.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "S":
-						Character.S.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.S.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "T":
-						Character.T.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.T.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "Ag":
-						Character.Ag.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.Ag.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "Int":
-						Character.Int.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.Int.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "Per":
-						Character.Per.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.Per.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "Wp":
-						Character.Wp.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.Wp.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "Fel":
-						Character.Fel.Base += (int.Parse(stat.Attribute("amount").Value));
+						Character.Fel.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 					case "Wounds":
-						Character.Wounds += (int.Parse(stat.Attribute("amount").Value));
+						Character.Wounds.BackMod += (int.Parse(stat.Attribute("amount").Value));
 						break;
 				}
 			}
@@ -1816,10 +1933,10 @@ namespace Dark_Heresy_Generator
 				switch (back.Element("fate").Element("points").Attribute("type").Value)
 				{
 					case "+":
-						Character.Fate += int.Parse(back.Element("fate").Element("points").Attribute("amount").Value);
+						Character.Fate.BackMod += int.Parse(back.Element("fate").Element("points").Attribute("amount").Value);
 						break;
 					case "-":
-						Character.Fate -= int.Parse(back.Element("fate").Element("points").Attribute("amount").Value);
+						Character.Fate.BackMod -= int.Parse(back.Element("fate").Element("points").Attribute("amount").Value);
 						break;
 				}
 			}
@@ -1832,7 +1949,7 @@ namespace Dark_Heresy_Generator
 				int num = int.Parse(points.Attribute("num").Value);
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
-				Insanity_Roll(num, size, Base);
+				Insanity_Roll(num, size, Base, Source.Background);
 			}
 		}
 		private void Add_Back_Corruption()
@@ -1843,7 +1960,7 @@ namespace Dark_Heresy_Generator
 				int num = int.Parse(points.Attribute("num").Value);
 				int size = int.Parse(points.Attribute("size").Value);
 				int Base = int.Parse(points.Attribute("base").Value);
-				Corruption_Roll(num, size, Base);
+				Corruption_Roll(num, size, Base, Source.Background);
 				if (points.Attributes().Count() > 3)
 				{
 					var query = from mal in points.Attributes()
@@ -1851,7 +1968,7 @@ namespace Dark_Heresy_Generator
 								select mal.Value;
 					if (query.ElementAt(0) == "true")
 					{
-						Malignancy();
+						Malignancy(Source.Background);
 					}
 				}
 			}
@@ -1864,28 +1981,28 @@ namespace Dark_Heresy_Generator
 			switch (career.Attribute("base").Value)
 			{
 				case "Adept":
-					Character.Int.Base += 3;
+					Character.Int.CareerMod += 3;
 					break;
 				case "Assassin":
-					Character.Ag.Base += 3;
+					Character.Ag.CareerMod += 3;
 					break;
 				case "Guardsman":
-					Character.BS.Base += 3;
+					Character.BS.CareerMod += 3;
 					break;
 				case "Scum":
 					if (GetCareer().Attribute("name").Value == "Lathesmaster")
 					{
-						Character.S.Base += 3;
-						Character.T.Base += 3;
-						Character.Ag.Base -= 5;
+						Character.S.CareerMod += 3;
+						Character.T.CareerMod += 3;
+						Character.Ag.CareerMod -= 5;
 					}
 					else
 					{
-						Character.Per.Base += 3;
+						Character.Per.CareerMod += 3;
 					}
 					break;
 				case "Tech-Priest":
-					Character.Wp.Base += 3;
+					Character.Wp.CareerMod += 3;
 					break;
 			}
 		}
@@ -1900,7 +2017,7 @@ namespace Dark_Heresy_Generator
 				{
 					thrones += Dice.Next(1,11);
 				}
-				Character.Int.Base += 3;
+				Character.Int.CareerMod += 3;
 				Character.Thrones += thrones;
 				return "Reconstructed Skull: You have large metal plates in your head, some"+
 					" of which are clearly visible. Reduce your Intelligence by 3, but "+
@@ -1908,19 +2025,19 @@ namespace Dark_Heresy_Generator
 			}
 			else if (result >= 9 && result <= 14)
 			{
-				Character.Insanity += Dice.Next(1, 11);
+				Character.Insanity.CareerMod += Dice.Next(1, 11);
 				return "Hunted: You believe certain parts of your psyche, those amputated by"+
 					" the sanctioners, have gained sentience and are tracking you down. Gain 1d10 Insanity Points";
 			}
 			else if (result >= 15 && result <= 25)
 			{
-				Character.Insanity += Dice.Next(1, 6);
+				Character.Insanity.CareerMod += Dice.Next(1, 6);
 				return "Unlovely Memories: Such was your sanctioning, that you visibly "+
 					"twitch and grimace whenever Holy Terra is mentioned. Gain 1d5 Insanity Points";
 			}
 			else if (result >= 26 && result <= 35)
 			{
-				Character.Insanity += Dice.Next(1, 6);
+				Character.Insanity.CareerMod += Dice.Next(1, 6);
 				return "The Horror, the Horror: Your hair is pure white, you occasionally"+
 					" gibber quietly to yourself and you endure terrible nightmares every night.  "+
 					"Gain 1d5 Insanity Points.";
@@ -1932,13 +2049,13 @@ namespace Dark_Heresy_Generator
 			}
 			else if (result >= 43 && result <= 49)
 			{
-				Character.Gear.Add(new Equipment("Carven Dentures (50 thrones)\n","Career"));
+				Character.Gear.Add(new Equipment("Carven Dentures (50 thrones)\n",Source.Career));
 				return "Dental Probes: You no longer have any teeth in your head. You have a "+
 					"set of carven dentures, They are of Good quality and worth 50 Thrones.";
 			}
 			else if (result >= 50 && result <= 57)
 			{
-				Character.Gear.Add(new Equipment("Common Cybernetic Eyes\n","Career"));
+				Character.Gear.Add(new Equipment("Common Cybernetic Eyes\n",Source.Career));
 				return "Optical Rupture: Your sanctioning rituals have done great violence to your eyes."+
 					" They have been removed and replaced with Common quality cybernetic senses";
 			}
@@ -1960,116 +2077,215 @@ namespace Dark_Heresy_Generator
 			}
 			else if (result >= 76 && result <= 88)
 			{
-				Character.Talents.Add(new Talent("Chem Geld","Career"));
-				Character.Gear.Add(new Equipment("Chattallium Ring(100 thrones)","Career"));
+				Character.Talents.Add(new Talent("Chem Geld",Source.Career));
+				Character.Gear.Add(new Equipment("Chattallium Ring(100 thrones)",Source.Career));
 				return "Throne Wed: You cleave only unto the Emperor. You gain the Chem "+
 					"Geld talent, and a chattallium ring, worth 100 Thrones.";
 			}
 			else if (result >= 89 && result <= 94)
 			{
-				Character.T.Base += 3;
+				Character.T.CareerMod += 3;
 				return "Witch Prickling: Your body is covered in thousands of tiny scars. "+
 					"You have a thorough dislike of needles. Increase your Toughness by 3.";
 			}
  			else
 			{
-				Character.Wp.Base += 3;
+				Character.Wp.CareerMod += 3;
 				return "Hypno-doctrination: Powerful conditioning causes you to chant the "+
 					"Litany of Protection in a whispered voice whenever you are asleep or "+
 					"unconscious. Increase your Willpower by 3.";
 			}
 		}
-		private void MinorMutation(int result, string Source)
+		private void MinorMutation(int result, Source source)
 		{
 			if (result >= 1 && result <= 20)
 			{
 				Character.Traits.Add(new Trait("Grotesque",
 					"The mutant is either badly deformed, scarred or bestial Fellowship Tests with"+
-					" ‘normals’ are made at –20, but +10 to Intimidate Tests.",Source));
+					" ‘normals’ are made at –20, but +10 to Intimidate Tests.",source));
 			}
 			else if (result >= 21 && result <= 30)
 			{
 				Character.Traits.Add(new Trait("Tough Hide",
-					"The mutant has 1 AP worth of Natural Armour thanks to dense skin and scar tissue.", Source));
+					"The mutant has 1 AP worth of Natural Armour thanks to dense skin and scar tissue.", source));
 			}
 			else if (result >= 31 && result <= 40)
 			{
 				Character.Traits.Add(new Trait("Misshapen",
 				"The mutant’s spine and/or limbs are horribly twisted, giving it a penalty of -1d10 to"+
-				" its Agility.", Source));
-				Character.Ag.Base -= Dice.Next(1, 11);
+				" its Agility.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.Ag.BackMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.Ag.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.Ag.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Origin:
+						Character.Ag.OriginBase -= Dice.Next(1, 11);
+						break;
+				}
 			}
 			else if (result >= 41 && result <= 50)
 			{
 				Character.Traits.Add(new Trait("Feels No Pain",
-					"The mutant cares little for injury or harm and gains +1 Wound.", Source));
-				Character.Wounds += 1;
+					"The mutant cares little for injury or harm and gains +1 Wound.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.Wounds.BackMod += 1;
+						break;
+					case Source.Career:
+						Character.Wounds.CareerMod += 1;
+						break;
+					case Source.Divination:
+						Character.Wounds.DivMod += 1;
+						break;
+					case Source.Origin:
+						Character.Wounds.OriginBase += 1;
+						break;
+				}
 			}
 			else if (result >= 51 && result <= 60)
 			{
 				Character.Traits.Add(new Trait("Brute", 
 					"The mutant is physically powerful with deformed masses of muscle. "+
-					"Apply +10 Strength, +10 Toughness and –10 Agility.", Source));
-				Character.S.Base += 10;
-				Character.T.Base += 10;
-				Character.Ag.Base -= 10;
+					"Apply +10 Strength, +10 Toughness and –10 Agility.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.S.BackMod += 10;
+						Character.T.BackMod += 10;
+						Character.Ag.BackMod -= 10;
+						break;
+					case Source.Career:
+						Character.S.CareerMod += 10;
+						Character.T.CareerMod += 10;
+						Character.Ag.CareerMod -= 10;
+						break;
+					case Source.Divination:
+						Character.S.DivMod += 10;
+						Character.T.DivMod += 10;
+						Character.Ag.DivMod -= 10;
+						break;
+					case Source.Origin:
+						Character.S.OriginBase += 10;
+						Character.T.OriginBase += 10;
+						Character.Ag.OriginBase -= 10;
+						break;
+				}
 			}
 			else if (result >= 61 && result <= 70)
 			{
 				Character.Traits.Add(new Trait("Nightsider",
 					"The mutant gains the Dark Sight trait, but –10 penalty to all Actions in "+
-					"bright light or daylight unless its eyes are shielded.", Source));
+					"bright light or daylight unless its eyes are shielded.", source));
 				Character.Traits.Add(new Trait("Dark Sight", 
 					"See normally even in areas of total darkness and never takes a penalty in "+
-					"dim or no lighting.", Source));
+					"dim or no lighting.", source));
 			}
 			else if (result >= 71 && result <= 80)
 			{
 				Character.Traits.Add(new Trait("Big Eyes", 
 					"The mutant’s eyes are virtually lidless and watery. Apply +10 Perception "+
-					"and –10 Fellowship.", Source));
-				Character.Per.Base += 10;
-				Character.Fel.Base -= 10;
+					"and –10 Fellowship.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.Per.BackMod += 10;
+						Character.Fel.BackMod -= 10;
+						break;
+					case Source.Career:
+						Character.Per.CareerMod += 10;
+						Character.Fel.CareerMod -= 10;
+						break;
+					case Source.Divination:
+						Character.Per.DivMod += 10;
+						Character.Fel.DivMod -= 10;
+						break;
+					case Source.Origin:
+						Character.Per.OriginBase += 10;
+						Character.Fel.OriginBase -= 10;
+						break;
+				}
 			}
 			else if (result >= 81 && result <= 85)
 			{
 				Character.Traits.Add(new Trait("Malformed hands", 
 					"–10 to WS and BS and the mutant suffers a –20 penalty to all tasks involving"+
-					" fine physical manipulation.", Source));
-				Character.WS.Base -= 10;
-				Character.BS.Base -= 10;
+					" fine physical manipulation.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.WS.BackMod -= 10;
+						Character.BS.BackMod -= 10;
+						break;
+					case Source.Career:
+						Character.WS.CareerMod -= 10;
+						Character.BS.CareerMod -= 10;
+						break;
+					case Source.Divination:
+						Character.WS.DivMod -= 10;
+						Character.BS.DivMod -= 10;
+						break;
+					case Source.Origin:
+						Character.WS.OriginBase -= 10;
+						Character.BS.OriginBase -= 10;
+						break;
+				}
 			}
 			else if (result >= 86 && result <= 89)
 			{
 				Character.Traits.Add(new Trait("Tox Blood",
 					"The mutant’s system is saturated with toxic pollutants and poisonous chemicals. "+
 					"+10 resistance to toxins and poisons, however it suffers a –1d10 penalty to its"+
-					" Intelligence and Fellowship.", Source));
-				Character.Int.Base -= Dice.Next(1, 11);
-				Character.Fel.Base -= Dice.Next(1, 11);
+					" Intelligence and Fellowship.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.Int.BackMod -= Dice.Next(1, 11);
+						Character.Fel.BackMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.Int.CareerMod -= Dice.Next(1, 11);
+						Character.Fel.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.Int.DivMod -= Dice.Next(1, 11);
+						Character.Fel.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Origin:
+						Character.Int.OriginBase -= Dice.Next(1, 11);
+						Character.Fel.OriginBase -= Dice.Next(1, 11);
+						break;
+				}
 			}
 			else if (result >= 90 && result <= 99)
 			{
 				Character.Traits.Add(new Trait("Wyrdling", 
 					"The mutant has Minor Psychic Powers that "+
-					"it has so far been able to conceal. The mutant has a Psy Rating of 1.", Source));
-				Character.Talents.Add(new Talent("Psy Rating 1",Source));
+					"it has so far been able to conceal. The mutant has a Psy Rating of 1.", source));
+				Character.Talents.Add(new Talent("Psy Rating 1",source));
 			}
 			else
 			{
-				MajorMutation(Dice.Next(1,101),Source);
+				MajorMutation(Dice.Next(1,101),source);
 			}
 			CharacterUpdate();
 		}
-		private void MajorMutation(int result, string Source)
+		private void MajorMutation(int result, Source source)
 		{
 			if (result >= 1 && result <= 25)
 			{
 				Character.Traits.Add(new Trait("Vile Deformity",
 					"The mutant is marked by some terrible deformity that shows the touch of the"+
 					" warp and should not exist in a rational universe. The mutant gains the Disturbing "+
-					"trait.", Source));
-				Character.Traits.Add(new Trait("Disturbing", "Fear Rating 1.", Source));
+					"trait.", source));
+				Character.Traits.Add(new Trait("Disturbing", "Fear Rating 1.", source));
 
 			}
 			else if (result >= 26 && result <= 35)
@@ -2077,32 +2293,69 @@ namespace Dark_Heresy_Generator
 				Character.Traits.Add(new Trait("Aberration",
 					"The mutant has become a weird hybrid of man and animal (or reptile, insect, etc.) "+
 					"Apply +10 Strength, +10 Agility, –1d10 Intelligence, -10 Fellowship and the Sprint "+
-					"talent.", Source));
-				Character.S.Base += 10;
-				Character.Ag.Base += 10;
-				Character.Int.Base -= Dice.Next(1,11);
-				Character.Talents.Add(new Talent("Sprint", Source));
+					"talent.", source));
+				switch (source)
+				{
+					case Source.Origin:
+						Character.S.OriginBase += 10;
+						Character.Ag.OriginBase += 10;
+						Character.Int.OriginBase -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.S.DivMod += 10;
+						Character.Ag.DivMod += 10;
+						Character.Int.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Background:
+						Character.S.BackMod += 10;
+						Character.Ag.BackMod += 10;
+						Character.Int.BackMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.S.CareerMod += 10;
+						Character.Ag.CareerMod += 10;
+						Character.Int.CareerMod -= Dice.Next(1, 11);
+						break;
+				}
+				Character.Talents.Add(new Talent("Sprint", source));
 			}
 			else if (result >= 36 && result <= 40)
 			{
 				Character.Traits.Add(new Trait("Degenerate Mind", 
 					"The mutant’s mind is warped and inhuman. Apply –1d10 Intelligence +10 Fellowship, "+
 					"roll 1d10 and apply the following Talents or Trait: 1–3: Frenzy, 4–7: Fearless, 8–0: "+
-					"From Beyond.", Source));
-				Character.Fel.Base += 10;
-				Character.Int.Base -= Dice.Next(1,11);
+					"From Beyond.", source));
+				switch (source)
+				{
+					case Source.Origin:
+						Character.Fel.OriginBase += 10;
+						Character.Int.OriginBase -= Dice.Next(1,11);
+						break;
+					case Source.Career:
+						Character.Fel.CareerMod += 10;
+						Character.Int.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Background:
+						Character.Fel.BackMod += 10;
+						Character.Int.BackMod -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.Fel.DivMod += 10;
+						Character.Int.DivMod -= Dice.Next(1, 11);
+						break;
+				}
 				switch(Dice.Next(1,11))
 				{
 					case 1: case 2: case 3:
-						Character.Talents.Add(new Talent("Frenzy", Source));
+						Character.Talents.Add(new Talent("Frenzy", source));
 						break;
 					case 4: case 5: case 6: case 7:
-						Character.Talents.Add(new Talent("Fearless", Source));
+						Character.Talents.Add(new Talent("Fearless", source));
 						break;
 					case 8: case 9: case 10:
 						Character.Traits.Add(new Trait("From Beyond", 
 							"Immune to Fear, Pinning, Insanity Points and Psychic Powers used to cloud, "+
-							"control or delude its mind", Source));
+							"control or delude its mind", source));
 						break;
 				}
 			}
@@ -2111,7 +2364,7 @@ namespace Dark_Heresy_Generator
 				Character.Traits.Add(new Trait("Ravaged Body", 
 					"The mutant’s body has been entirely re-made by the warp. Gain 1d5 Minor Mutations,"+
 					" re-rolling duplicate rolls. Such mutations, regardless of their nature, still show "+
-					"the obvious taint of Chaos", Source));
+					"the obvious taint of Chaos", source));
 				List<int> rolls = new List<int>();
 				for(int i = 0; i < Dice.Next(1,6); i++)
 				{
@@ -2127,7 +2380,7 @@ namespace Dark_Heresy_Generator
 				}
 				foreach(int roll in rolls)
 				{
-					MinorMutation(roll,Source);
+					MinorMutation(roll,source);
 				}
 			}
 			else if (result >= 51 && result <= 60)
@@ -2135,17 +2388,31 @@ namespace Dark_Heresy_Generator
 				Character.Traits.Add(new Trait("Clawed/Fanged", 
 					"The mutant gains razor claws, a fanged maw, barbed flesh or "+
 					"some other form of Natural Weapon that inflicts 1d10 R or I Primitive damage "+
-					"in close combat.", Source));
+					"in close combat.", source));
 			}
 			else if (result >= 61 && result <= 65)
 			{
 				Character.Traits.Add(new Trait("Necrophage", 
 					"The mutant gains +10 Toughness and the Regeneration trait, "+
-					"but must sustain itself on copious quantities of raw meat or starve.", Source));
-				Character.T.Base += 10;
+					"but must sustain itself on copious quantities of raw meat or starve.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.T.BackMod += 10;
+						break;
+					case Source.Career:
+						Character.T.CareerMod += 10;
+						break;
+					case Source.Divination:
+						Character.T.DivMod += 10;
+						break;
+					case Source.Origin:
+						Character.T.OriginBase += 10;
+						break;
+				}
 				Character.Traits.Add(new Trait("Regeneration", 
 					"Each Round, at the start of its Turn, the creature Tests"+
-					" Toughness to remove 1 point of Damage.", Source));
+					" Toughness to remove 1 point of Damage.", source));
 			}
 			else if (result >= 66 && result <= 70)
 			{
@@ -2153,53 +2420,84 @@ namespace Dark_Heresy_Generator
 					"Beneath the mutants’ skin a blasphemous transformation has"+
 					" taken place, exchanging living organs for writhing creatures and blood for "+
 					"ichorous, maggot-ridden filth. If the mutant suffers Critical Damage, those "+
-					"witnessing it must take a Fear Test at –10.", Source));
+					"witnessing it must take a Fear Test at –10.", source));
 			}
 			else if (result >= 71 && result <= 75)
 			{
 				Character.Traits.Add(new Trait("Vile Alacrity", "The mutant is constantly juddering and shaking unnaturally and "+
 					"can move almost faster than sight. It gains the Unnatural Agility (x2) trait and "+
-					"the Sprint talent, with a penalty of –10 to Weapon Skill and Ballistic Skill.", Source));
+					"the Sprint talent, with a penalty of –10 to Weapon Skill and Ballistic Skill.", source));
 
-				Character.Traits.Add(new Trait("Unnatural Agility(x2)", "Agility Bonus x2", Source));
-				Character.Talents.Add(new Talent("Sprint", Source));
-				Character.WS.Base -= 10;
-				Character.BS.Base -= 10;
+				Character.Traits.Add(new Trait("Unnatural Agility(x2)", "Agility Bonus x2", source));
+				Character.Talents.Add(new Talent("Sprint", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.WS.BackMod -= 10;
+						Character.BS.BackMod -= 10;
+						break;
+					case Source.Career:
+						Character.WS.CareerMod -= 10;
+						Character.BS.CareerMod -= 10;
+						break;
+					case Source.Divination:
+						Character.WS.DivMod -= 10;
+						Character.BS.DivMod -= 10;
+						break;
+					case Source.Origin:
+						Character.WS.OriginBase -= 10;
+						Character.BS.OriginBase -= 10;
+						break;
+				}
 			}
 			else if (result >= 76 && result <= 80)
 			{
 				Character.Traits.Add(new Trait("Hideous Strength",
-					"The mutant gains the Unnatural Strength (x2) trait.", Source));
-				Character.Traits.Add(new Trait("Unnatural Strength(x2)", "Strength Bonus x2", Source));
+					"The mutant gains the Unnatural Strength (x2) trait.", source));
+				Character.Traits.Add(new Trait("Unnatural Strength(x2)", "Strength Bonus x2", source));
 			}
 			else if (result >= 81 && result <= 85)
 			{
 				Character.Traits.Add(new Trait("Multiple Appendages", 
 					"The mutant has sprouted additional functioning limbs in "+
 					"the shape of arms, tentacles or a prehensile tail (or tails). Gain "+
-					"Ambidextrous and Two-Weapon Wielder and +10 on Climb and Grapple.", Source));
-				Character.Talents.Add(new Talent("Ambidextrous",Source));
-				Character.Talents.Add(new Talent("Two-Weapon Wielder(Melee)",Source));
-				Character.Talents.Add(new Talent("Two-Weapon Wielder(Ballistic)",Source));
+					"Ambidextrous and Two-Weapon Wielder and +10 on Climb and Grapple.", source));
+				Character.Talents.Add(new Talent("Ambidextrous",source));
+				Character.Talents.Add(new Talent("Two-Weapon Wielder(Melee)",source));
+				Character.Talents.Add(new Talent("Two-Weapon Wielder(Ballistic)",source));
 			}
 			else if (result >= 86 && result <= 90)
 			{
 				Character.Traits.Add(new Trait("Worm", 
 					"The mutant’s lower limbs have fused together to form a "+
 					"worm or snake-like tail. They gain the Crawler trait, +5 Wounds and the "+
-					"Disturbing trait.", Source));
+					"Disturbing trait.", source));
 				Character.Traits.Add(new Trait("Crawler", 
 					"The move for a creature with this Trait is half its Agility"+
-					" Bonus, but it does not take penalties for moving over Difficult Terrain.", Source));
-				Character.Wounds += 5;
-				Character.Traits.Add(new Trait("Disturbing", "Fear Rating 1.", Source));
+					" Bonus, but it does not take penalties for moving over Difficult Terrain.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.Wounds.BackMod += 5;
+						break;
+					case Source.Career:
+						Character.Wounds.CareerMod += 5;
+						break;
+					case Source.Divination:
+						Character.Wounds.DivMod += 5;
+						break;
+					case Source.Origin:
+						Character.Wounds.OriginBase += 5;
+						break;
+				}
+				Character.Traits.Add(new Trait("Disturbing", "Fear Rating 1.", source));
 			}
 			else if (result >= 91 && result <= 92)
 			{
 				Character.Traits.Add(new Trait("Nightmarish", 
 					"So warped and horrific is the mutant’s appearance, it can "+
-					"cause enemies to flee in fear. It gains the Frightening trait.", Source));
-				Character.Traits.Add(new Trait("Frightening", "Fear Rating 2.", Source));
+					"cause enemies to flee in fear. It gains the Frightening trait.", source));
+				Character.Traits.Add(new Trait("Frightening", "Fear Rating 2.", source));
 			}
 			else if (result >= 93 && result <= 94)
 			{
@@ -2207,24 +2505,52 @@ namespace Dark_Heresy_Generator
 					"The mutant possesses a sickeningly liquid flexibility and is"+
 					" able to distend and flatten its body. Apply +10 Agility and +20 to Climb Tests, "+
 					"and Grappling attacks. They may also fit through spaces only one-quarter its usual"+
-					" body dimensions.", Source));
-				Character.Ag.Base += 10;
+					" body dimensions.", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.Ag.BackMod += 10;
+						break;
+					case Source.Career:
+						Character.Ag.CareerMod += 10;
+						break;
+					case Source.Divination:
+						Character.Ag.DivMod += 10;
+						break;
+					case Source.Origin:
+						Character.Ag.OriginBase += 10;
+						break;
+				}
 			}
 			else if (result >= 95 && result <= 96)
 			{
 				Character.Traits.Add(new Trait("Winged", 
 					"The mutant’s body has warped to accommodate a pair of leathery "+
-					"wings or the like. They gain the Flyer trait (1d10+5)", Source));
+					"wings or the like. They gain the Flyer trait (1d10+5)", source));
 				int amount=Dice.Next(1,11)+5;
 				Character.Traits.Add(new Trait("Flyer("+amount.ToString()+")", 
-					"Can Fly "+amount.ToString()+" meters", Source));
+					"Can Fly "+amount.ToString()+" meters", source));
 			}
 			else if (result >= 97 && result <= 98)
 			{
 				Character.Traits.Add(new Trait("Corpulent", "The mutant’s huge and bloated frame gives them +5 Wounds and "+
-					"the Unnatural Toughness (x2) trait. The mutant can't run.", Source));
-				Character.Traits.Add(new Trait("Unnatural Toughness(x2)", "Toughness Bonus x2", Source));
-				Character.Wounds += 5;
+					"the Unnatural Toughness (x2) trait. The mutant can't run.", source));
+				Character.Traits.Add(new Trait("Unnatural Toughness(x2)", "Toughness Bonus x2", source));
+				switch (source)
+				{
+					case Source.Background:
+						Character.Wounds.BackMod += 5;
+						break;
+					case Source.Career:
+						Character.Wounds.CareerMod += 5;
+						break;
+					case Source.Divination:
+						Character.Wounds.DivMod += 5;
+						break;
+					case Source.Origin:
+						Character.Wounds.OriginBase += 5;
+						break;
+				}
 			}
 			else if (result == 99)
 			{
@@ -2232,27 +2558,27 @@ namespace Dark_Heresy_Generator
 					"The mutant may vomit burning bile, flesh-eating grubs or some "+
 					"other horrific substance instead of attacking normally in close combat. The "+
 					"attack uses the mutant’s BS, is a Full Action and can be Dodged but not Parried. "+
-					"This attack inflicts 1d10+5 R (or E) Tearing Damage", Source));
+					"This attack inflicts 1d10+5 R (or E) Tearing Damage", source));
 			}
 			else
 			{
 				Character.Traits.Add(new Trait("Hellspawn", 
 					"Saturated with the energies of the warp, the mutant is imbued"+
 					" with Daemonic energies and gains the From Beyond, Frightening and Daemonic "+
-					"traits and a Psy Rating of 2.", Source));
+					"traits and a Psy Rating of 2.", source));
 
 				Character.Traits.Add(new Trait("From Beyond", 
 					"Immune to Fear, Pinning, Insanity Points and " +
-					"Psychic Powers used to cloud, control or delude its mind", Source));
+					"Psychic Powers used to cloud, control or delude its mind", source));
 				
-				Character.Traits.Add(new Trait("Frightening", "Fear Rating 2", Source));
+				Character.Traits.Add(new Trait("Frightening", "Fear Rating 2", source));
 
 				Character.Traits.Add(new Trait("Daemonic", 
 					"Creatures with this Trait double their Toughness Bonus "+
 					"against all Damage, except for Damage inflicted by force weapons, Psychic "+
 					"Powers, holy attacks or other creatures with this Trait. Daemonic creatures "+
-					"are also immune to poison and disease.", Source));
-				Character.Talents.Add(new Talent("Psy Rating 2", Source));
+					"are also immune to poison and disease.", source));
+				Character.Talents.Add(new Talent("Psy Rating 2", source));
 			}
 			CharacterUpdate();
 		}
@@ -2297,7 +2623,7 @@ namespace Dark_Heresy_Generator
 			string insertname = Iname.Elements().ElementAt(Dice.Next(Iname.Elements().Count())).Value;
 			return selectedname.Replace("X", insertname);
 		}
-		private void Malignancy()
+		private void Malignancy(Source source)
 		{
 			int result = Dice.Next(1,101);
 			
@@ -2305,48 +2631,92 @@ namespace Dark_Heresy_Generator
 			{
 				Character.Traits.Add(new Trait("Palsy",
 					"The character suffers from numerous minor tics, shakes and tremors with no"+
-					" medical cause. Reduce his Agility by 1d10.",""));
-				Character.Ag.Base -= Dice.Next(1, 11);
+					" medical cause. Reduce his Agility by 1d10.", source));
+				switch(source)
+				{
+					case Source.Origin:
+						Character.Ag.OriginBase -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.Ag.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.Ag.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Background:
+						Character.Ag.BackMod -= Dice.Next(1, 11);
+						break;
+				}
+				
 			}
 			else if(result >= 11 && result <= 15)
 			{
 				Character.Traits.Add(new Trait("Dark-hearted",
 					"The character grows increasingly cruel, callous and vindictive. Reduce his "+
-					"Fellowship by 1d10.",""));
-				Character.Int.Base -= Dice.Next(1, 11);
+					"Fellowship by 1d10.",source));
+				switch (source)
+				{
+					case Source.Origin:
+						Character.Int.OriginBase -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.Int.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.Int.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Background:
+						Character.Int.BackMod -= Dice.Next(1, 11);
+						break;
+				}
+				
 			}
 			else if(result >= 16 && result <= 20)
 			{
 				Character.Traits.Add(new Trait("Ill-fortuned",
 					"Whenever the character uses a Fate Point roll a d10. On a score of 7, 8, 9 or 10"+
-					" it has no effect but it is lost anyway.",""));
+					" it has no effect but it is lost anyway.",source));
 			}
 			else if(result >= 21 && result <= 22)
 			{
 				Character.Traits.Add(new Trait("Skin Afflictions",
 					"The character is plagued by boils, scabs, weeping sores and the like. He takes "+
-					"a –20 penalty to all Charm Tests.",""));
+					"a –20 penalty to all Charm Tests.",source));
 			}
 			else if(result >= 23 && result <= 25)
 			{
 				Character.Traits.Add(new Trait("Night Eyes",
 					"Light pains the character, and unless he shields his eyes, he suffers a –10 "+
-					"penalty on all Tests when in an area of bright light.",""));
+					"penalty on all Tests when in an area of bright light.",source));
 			}
 			else if(result >= 26 && result <= 30)
 			{
 				Character.Traits.Add(new Trait("Morbid",
 					"The character finds it hard to concentrate as his mind is filled with macabre"+
 					" visions and tortured, gloom-filled trains of thought. The character’s "+
-					"Intelligence is reduced by 1d10.",""));
-				Character.Int.Base -= Dice.Next(1, 11);
+					"Intelligence is reduced by 1d10.",source));
+				switch (source)
+				{
+					case Source.Origin:
+						Character.Int.OriginBase -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.Int.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.Int.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Background:
+						Character.Int.BackMod -= Dice.Next(1, 11);
+						break;
+				}
 			}
 			else if(result >= 31 && result <= 33)
 			{
 				Character.Traits.Add(new Trait("Witch-mark",
 					"The character develops some minor physical deformity or easily concealable"+
 					" mutation. It is small, but perhaps enough to consign him to the stake if found"+
-					" out by a fanatical witch hunter. He must hide it well!",""));
+					" out by a fanatical witch hunter. He must hide it well!",source));
 				
 			}
 			else if(result >= 34 && result <= 45)
@@ -2354,14 +2724,14 @@ namespace Dark_Heresy_Generator
 				Character.Traits.Add(new Trait("Fell Obsession",
 					"This is the same as the Obsession Disorder. However, in this case the character is"+
 					" obsessed by a sinister or malign focus, such as collecting finger-bone trophies, "+
-					"ritual scarification, carrying out meaningless vivisections, etc.",""));
+					"ritual scarification, carrying out meaningless vivisections, etc.",source));
 			}
 			else if(result >= 46 && result <= 50)
 			{
 				Character.Traits.Add(new Trait("Hatred",
 					"The character develops an implacable hatred of a single group, individual or "+
 					"social class. The character will never side with or aid them without explicit "+
-					"orders or other vital cause, and even then grudgingly.",""));
+					"orders or other vital cause, and even then grudgingly.",source));
 			}
 			else if(result >= 51 && result <= 55)
 			{
@@ -2369,58 +2739,104 @@ namespace Dark_Heresy_Generator
 					"The character feels sick at the sight or sound of some otherwise innocuous thing"+
 					" such as prayer books and holy items, bare flesh, human laughter, fresh food, "+
 					"shellfish, etc. When he encounters the object of his revulsion, he must Test "+
-					"Toughness or suffer a –10 penalty to all Tests as long as he remains in its presence.",""));
+					"Toughness or suffer a –10 penalty to all Tests as long as he remains in its"+
+					" presence.",source));
 			}
 			else if(result >= 56 && result <= 60)
 			{
 				Character.Traits.Add(new Trait("Wasted Frame",
 					"The character’s pallor becomes corpse-like and his muscles waste away. "+
-					"The character’s Strength is reduced by 1d10.",""));
-				Character.S.Base -= Dice.Next(1, 11);
+					"The character’s Strength is reduced by 1d10.",source));
+				switch (source)
+				{
+					case Source.Origin:
+						Character.S.OriginBase -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.S.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.S.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Background:
+						Character.S.BackMod -= Dice.Next(1, 11);
+						break;
+				}
 			}
 			else if(result >= 61 && result <= 63)
 			{
 				Character.Traits.Add(new Trait("Night Terrors",
-					"The character is plagued by Daemonic visions in his sleep. See Horrific Nightmares.",""));
+					"The character is plagued by Daemonic visions in his sleep. See Horrific "+
+					"Nightmares.",source));
 			}
 			else if(result >= 64 && result <= 70)
 			{
 				Character.Traits.Add(new Trait("Poor Health",
 					"The character constantly suffers petty illnesses and phantom pains, and his"+
-					" wounds never seem to heal fully. The character’s Toughness is reduced by 1d10.",""));
-				Character.T.Base -= Dice.Next(1, 11);
+					" wounds never seem to heal fully. The character’s Toughness is reduced by "+
+					"1d10.",source));
+				switch (source)
+				{
+					case Source.Origin:
+						Character.T.OriginBase -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.T.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.T.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Background:
+						Character.T.BackMod -= Dice.Next(1, 11);
+						break;
+				}
 			}
 			else if(result >= 71 && result <= 75)
 			{
 				Character.Traits.Add(new Trait("Distrustful",
 					"The character cannot conceal the distrust and antipathy he has for others."+
-					" He must take a –10 penalty to Fellowship Tests when dealing with strangers.",""));
+					" He must take a –10 penalty to Fellowship Tests when dealing with strangers.",
+					source));
 			}
 			else if(result >= 76 && result <= 80)
 			{
 				Character.Traits.Add(new Trait("Malign Sight", 
 					"The world seems to darken, tarnish and rot if the character looks too long at"+
-					" anything. The character’s Perception is reduced by 1d10.",""));
-				Character.Per.Base -= Dice.Next(1, 11);
+					" anything. The character’s Perception is reduced by 1d10.",source));
+				switch (source)
+				{
+					case Source.Origin:
+						Character.Per.OriginBase -= Dice.Next(1, 11);
+						break;
+					case Source.Divination:
+						Character.Per.DivMod -= Dice.Next(1, 11);
+						break;
+					case Source.Career:
+						Character.Per.CareerMod -= Dice.Next(1, 11);
+						break;
+					case Source.Background:
+						Character.Per.BackMod -= Dice.Next(1, 11);
+						break;
+				}
 			}
 			else if(result >= 81 && result <= 83)
 			{
 				Character.Traits.Add(new Trait("Ashen Taste",
 					"Food and drink hold disgusting tastes and little sustenance for the character,"+
 					" and he can barely stomach eating. The character doubles the negative effects "+
-					"for levels of Fatigue.",""));
+					"for levels of Fatigue.",source));
 			}
 			else if(result >= 84 && result <= 90)
 			{
 				Character.Traits.Add(new Trait("Bloodlust",
 					"Murderous rage is never far from the character’s mind. After being wounded in"+
 					" combat, he must Test Willpower to incapacitate or allow his enemies to flee,"+
-					" rather than kill them outright, even if his intent is otherwise.",""));
+					" rather than kill them outright, even if his intent is otherwise.",source));
 			}
 			else if(result >= 91 && result <= 93)
 			{
 				Character.Traits.Add(new Trait("Blackouts", "The character suffers from inexplicable"+
-					" blackouts. When they occur and what happens during them is up to the GM.",""));
+					" blackouts. When they occur and what happens during them is up to the GM.",source));
 			}
 			else if(result >= 94 && result <= 100)
 			{
@@ -2428,7 +2844,7 @@ namespace Dark_Heresy_Generator
 					"The character is addicted to some bizarre and unnatural substance, such as "+
 					"eating rose petals, drinking blood, the taste of widows’ tears etc. This acts"+
 					" like a Minor Compulsion, but is freakish enough to cause serious suspicion if "+
-					"found out.",""));
+					"found out.",source));
 				
 			}
 		}
@@ -2443,22 +2859,22 @@ namespace Dark_Heresy_Generator
 						" and delusions. Increase your intelligence and insanity points by 1d10 "+
 						"(roll only once and apply the result to both).";
 					result = Dice.Next(1,11);
-					Character.Int.Base += result;
-					Character.Insanity += result;
+					Character.Int.OriginBase += result;
+					Character.Insanity.OriginBase += result;
 					break;
 				case 3: case 4:
 					Character.Traits.Last().Effect=
 						"The constant manipulation of your family's ancestry has rendered you a "+
 						"mule, much to the disappointment of the Ordo Famulous. You gain the Chem "+
 						"Geld talent.";
-					Character.Talents.Add(new Talent("Chem Geld","origin"));
+					Character.Talents.Add(new Talent("Chem Geld",Source.Origin));
 					break;
 				case 5: case 6:
 					Character.Traits.Last().Effect=
 						"You are a naturally gifted orator and dissembler but are unaccustomed to"+
 						" not being the centre of attention. You gain the Talented (Deceive) Talent"+
 						" and a -10 to all Concealment and Move Silent tests.";
-					Character.Talents.Add(new Talent("Talented(Deceive)","origin"));
+					Character.Talents.Add(new Talent("Talented(Deceive)",Source.Origin));
 					break;
 				case 7: case 8:
 					Character.Traits.Last().Effect=
@@ -2466,8 +2882,8 @@ namespace Dark_Heresy_Generator
 						"Sister Famulous nevertheless prepared you for your destiny. Lose 1 wound "+
 						"and -5 Toughness but begin play with Forbidden Lore (Daemonology, Heresy, "+
 						"Inquisition or Psykers).";
-					Character.Wounds -= 1;
-					Character.T.Base -= 5;
+					Character.Wounds.OriginBase -= 1;
+					Character.T.OriginBase -= 5;
 					List<string> list = new List<string>();
 					list.Add("Forbidden Lore(Daemonology)(Int)");
 					list.Add("Forbidden Lore(Heresy)(Int)");
@@ -2475,7 +2891,7 @@ namespace Dark_Heresy_Generator
 					list.Add("Forbidden Lore(Pyskers)(Int)");
 					DialogBoxList SkillDialog = new DialogBoxList(list);
 					DialogResult TalentResult = SkillDialog.ShowDialog();
-					Character.Skills.Add(new Skill(SkillDialog.selection,"origin"));
+					Character.Skills.Add(new Skill(SkillDialog.selection,Source.Origin));
 					break;
 				case 9: case 10:
 					Character.Traits.Last().Effect=
@@ -2483,13 +2899,10 @@ namespace Dark_Heresy_Generator
 						"Increase your Fellowship and Corruption points by 1d10 (roll only once and apply"+
 						" the result to both).";
 					result = Dice.Next(1,11);
-					Character.Fel.Base += result;
-					Character.Corruption += result;
+					Character.Fel.OriginBase += result;
+					Character.Corruption.OriginBase += result;
 					break;
 			}
-
-
-
 		}
 		private void ColdTraderChoice()
 		{
@@ -2502,18 +2915,24 @@ namespace Dark_Heresy_Generator
 			switch (ChoiceDialog.selection)
 			{
 				case "Exotic Weapon Training(Needle Rifle) & Needle Rifle w/ 2 reloads":
-					Character.Talents.Add(new Talent("Exotic Weapon Training(Needle Rifle)", "background"));
-					Character.Gear.Add(new Equipment("Needle Rifle with 2 reloads", "background"));
+					Character.Talents.Add(new Talent("Exotic Weapon Training(Needle Rifle)", 
+						Source.Background));
+					Character.Gear.Add(new Equipment("Needle Rifle with 2 reloads",
+						Source.Background));
 					break;
 
 				case "Exotic Weapon Training(Web Pistol) & Web Pistol with 2 reloads":
-					Character.Talents.Add(new Talent("Exotic Weapon Training(Web Pistol)", "background"));
-					Character.Gear.Add(new Equipment("Web Pistol with 2 reloads", "background"));
+					Character.Talents.Add(new Talent("Exotic Weapon Training(Web Pistol)",
+						Source.Background));
+					Character.Gear.Add(new Equipment("Web Pistol with 2 reloads",
+						Source.Background));
 					break;
 
 				case "Speak Language(Pick One Xenos) and Xeno Mesh":
-					Character.Talents.Add(new Talent("Speak Language(Pick One Xenos)", "background"));
-					Character.Gear.Add(new Equipment("Xeno Mesh armour", "background"));
+					Character.Talents.Add(new Talent("Speak Language(Pick One Xenos)", 
+						Source.Background));
+					Character.Gear.Add(new Equipment("Xeno Mesh armour",
+						Source.Background));
 					break;
 			}
 		}
@@ -2530,7 +2949,7 @@ namespace Dark_Heresy_Generator
 			DialogBoxList ChoiceDialog = new DialogBoxList(list);
 			ChoiceDialog.ShowDialog();
 
-			Character.Skills.Add(new Skill(ChoiceDialog.selection, "background"));
+			Character.Skills.Add(new Skill(ChoiceDialog.selection, Source.Background));
 
 			List<string> list1 = new List<string>();
 			list1.Add("Awareness(Per)");
@@ -2550,7 +2969,7 @@ namespace Dark_Heresy_Generator
 			DialogBoxList ChoiceDialog1 = new DialogBoxList(list1);
 			ChoiceDialog1.ShowDialog();
 
-			Character.Skills.Add(new Skill(ChoiceDialog1.selection, "background"));
+			Character.Skills.Add(new Skill(ChoiceDialog1.selection, Source.Background));
 		}
 		private void GuidingHandEmperor()
 		{
@@ -2563,9 +2982,10 @@ namespace Dark_Heresy_Generator
 						"You have been blessed with visions of the Immortal Foe and given the knowledge" +
 						" on how to defeat them, at the cost of their sanity. Gain Hatred(Daemons) " +
 						"and 1d10 Insanity Points";
-					Character.Talents.Add(new Talent("Hatred(Daemons)", "background"));
+					Character.Talents.Add(new Talent("Hatred(Daemons)",
+						Source.Background));
 					result = Dice.Next(1, 11);
-					Character.Insanity += result;
+					Character.Insanity.BackMod += result;
 					break;
 				case 3:
 				case 4:
@@ -2573,8 +2993,8 @@ namespace Dark_Heresy_Generator
 						"The process has left the body broken, but the mind sharper. Reduce character's" +
 						" Strength by 1d10, but increase Intelligence by the same amount";
 					result = Dice.Next(1, 11);
-					Character.S.Base -= result;
-					Character.Int.Base += result;
+					Character.S.BackMod -= result;
+					Character.Int.BackMod += result;
 					break;
 				case 5:
 				case 6:
@@ -2584,8 +3004,8 @@ namespace Dark_Heresy_Generator
 						" which burns and sloughs off in large patches and heals slowly. Reduce " +
 						"Fellowship by 1d10 and gain a Fate Point";
 					result = Dice.Next(1, 11);
-					Character.Fel.Base -= result;
-					Character.Fate += 1;
+					Character.Fel.BackMod -= result;
+					Character.Fate.BackMod += 1;
 					break;
 				case 7:
 				case 8:
@@ -2595,7 +3015,7 @@ namespace Dark_Heresy_Generator
 						"any test to resist psychic powers used by non daemons";
 					Character.Traits.Add(new Trait("Dark Sight",
 					"See normally even in areas of total darkness and never takes a penalty in " +
-					"dim or no lighting.", "background"));
+					"dim or no lighting.", Source.Background));
 					break;
 				case 9:
 				case 10:
@@ -2646,12 +3066,12 @@ namespace Dark_Heresy_Generator
 			Fel_Box.Text = Character.Fel.Value.ToString();
 			#endregion
 
-			Wounds_Box.Text = Character.Wounds.ToString();
-			Character.CurWounds = Character.Wounds;
-			Fate_Box.Text = Character.Fate.ToString();
-			Character.CurFate = Character.Fate;
-			Insanity_Box.Text = Character.Insanity.ToString();
-			Corruption_Box.Text = Character.Corruption.ToString();
+			Wounds_Box.Text = Character.Wounds.Value.ToString();
+			Character.CurWounds = Character.Wounds.Value;
+			Fate_Box.Text = Character.Fate.Value.ToString();
+			Character.CurFate = Character.Fate.Value;
+			Insanity_Box.Text = Character.Insanity.Value.ToString();
+			Corruption_Box.Text = Character.Corruption.Value.ToString();
 
 			#region Tabs
 			Traits_Box.Clear();
@@ -2723,6 +3143,213 @@ namespace Dark_Heresy_Generator
 
 			Roll_button.Enabled = false;
 			Reroll_Disable();
+		}
+		private void BackReset()
+		{
+			Character.Background.Reset();
+
+			#region Base Stats
+			Character.WS.BackMod = 0;
+			Character.BS.BackMod = 0;
+			Character.S.BackMod = 0;
+			Character.T.BackMod = 0;
+			Character.Ag.BackMod = 0;
+			Character.Int.BackMod = 0;
+			Character.Per.BackMod = 0;
+			Character.Wp.BackMod = 0;
+			Character.Fel.BackMod = 0;
+			#endregion
+
+			Character.Wounds.BackMod = 0;
+			Character.Fate.BackMod = 0;
+			Character.Insanity.BackMod = 0;
+			Character.Corruption.BackMod = 0;
+
+			#region Lists
+			#region Traits
+			for (int i = 0; i < Character.Traits.Count; i++)
+			{
+				if (Character.Traits.ElementAt(i).Source == Source.Background)
+				{
+					Character.Traits.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Talents
+			for (int i = 0; i < Character.Talents.Count; i++)
+			{
+				if (Character.Talents.ElementAt(i).Source == Source.Background)
+				{
+					Character.Talents.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Skills
+			for (int i = 0; i < Character.Skills.Count; i++)
+			{
+				if (Character.Skills.ElementAt(i).Source == Source.Background)
+				{
+					Character.Skills.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Gear
+			bool gearRemoved=false;
+			for (int i = 0; i < Character.Gear.Count; i++)
+			{
+				if (Character.Gear.ElementAt(i).Source == Source.Background)
+				{
+					Character.Gear.RemoveAt(i);
+					gearRemoved = true;
+					i--;
+				}
+			}
+			if (gearRemoved)
+			{
+				Add_Career_Gear();
+			}
+			#endregion
+			#endregion
+
+			Add_Wealth();
+		}
+		private void CareerReset()
+		{
+			if (Character.Background.Name != "")
+			{
+				BackReset();
+			}
+			Character.Career.Reset();
+			#region Base Stats
+			Character.WS.CareerMod = 0;
+			Character.BS.CareerMod = 0;
+			Character.S.CareerMod = 0;
+			Character.T.CareerMod = 0;
+			Character.Ag.CareerMod = 0;
+			Character.Int.CareerMod = 0;
+			Character.Per.CareerMod = 0;
+			Character.Wp.CareerMod = 0;
+			Character.Fel.CareerMod = 0;
+			#endregion
+
+			Character.Wounds.CareerMod = 0;
+			Character.Fate.CareerMod = 0;
+			Character.Insanity.CareerMod = 0;
+			Character.Corruption.CareerMod = 0;
+
+			#region Lists
+			#region Traits
+			for (int i = 0; i < Character.Traits.Count; i++)
+			{
+				if (Character.Traits.ElementAt(i).Source == Source.Career)
+				{
+					Character.Traits.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Talents
+			for (int i = 0; i < Character.Talents.Count; i++)
+			{
+				if (Character.Talents.ElementAt(i).Source == Source.Career)
+				{
+					Character.Talents.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Skills
+			for (int i = 0; i < Character.Skills.Count; i++)
+			{
+				if (Character.Skills.ElementAt(i).Source == Source.Career)
+				{
+					Character.Skills.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Gear
+			for (int i = 0; i < Character.Gear.Count; i++)
+			{
+				if (Character.Gear.ElementAt(i).Source == Source.Career)
+				{
+					Character.Gear.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#endregion
+		}
+		private void DivReset()
+		{
+			#region Base Stats
+			Character.WS.DivMod = 0;
+			Character.BS.DivMod = 0;
+			Character.S.DivMod = 0;
+			Character.T.DivMod = 0;
+			Character.Ag.DivMod = 0;
+			Character.Int.DivMod = 0;
+			Character.Per.DivMod = 0;
+			Character.Wp.DivMod = 0;
+			Character.Fel.DivMod = 0;
+			#endregion
+
+			Character.Wounds.DivMod = 0;
+			Character.Fate.DivMod = 0;
+			Character.Insanity.DivMod = 0;
+			Character.Corruption.DivMod = 0;
+
+			#region Lists
+			#region Traits
+			for (int i = 0; i < Character.Traits.Count; i++)
+			{
+				if (Character.Traits.ElementAt(i).Source == Source.Divination)
+				{
+					Character.Traits.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Talents
+			for (int i = 0; i < Character.Talents.Count; i++)
+			{
+				if (Character.Talents.ElementAt(i).Source == Source.Divination)
+				{
+					Character.Talents.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Skills
+			for (int i = 0; i < Character.Skills.Count; i++)
+			{
+				if (Character.Skills.ElementAt(i).Source == Source.Divination)
+				{
+					Character.Skills.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#region Gear
+			for (int i = 0; i < Character.Gear.Count; i++)
+			{
+				if (Character.Gear.ElementAt(i).Source == Source.Divination)
+				{
+					Character.Gear.RemoveAt(i);
+					i--;
+				}
+			}
+			#endregion
+			#endregion
+		}
+
+		private void UnDiv_Button_Click(object sender, EventArgs e)
+		{
+			DivReset();
+			CharacterUpdate();
 		}
 	}
 }
