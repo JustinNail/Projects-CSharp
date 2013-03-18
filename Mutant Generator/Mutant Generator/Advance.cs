@@ -3,12 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Dark_Heresy_Generator
+namespace DarkHeresyCharacter
 {
-	class Advance
+	[Serializable()]
+	public class Advance
 	{
 		string Type;
 		int Cost;
 		string Name;
+
+		public Advance()
+		{
+			Type = "";
+			Cost = 0;
+			Name = "";
+		}
+		public Advance(string type, int cost, string name)
+		{
+			Type = type;
+			Cost = cost;
+			Name = name;
+		}
 	}
 }

@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Dark_Heresy_Generator
+namespace DarkHeresyCharacter
 {
 	[Serializable()]
-	class Origin
+	public class Origin
 	{
 		public string Name { get; set; }
 		public string Base { get; set; }
 
+		public Origin()
+		{
+			Name = "";
+			Base = "";
+		}
 		public Origin(string n, string b)
 		{
 			Name = n;

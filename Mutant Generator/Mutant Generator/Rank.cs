@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Dark_Heresy_Generator
+namespace DarkHeresyCharacter
 {
-	class Rank
+	[Serializable()]
+	public class Rank
 	{
 		public string Name { get; set; }
 		public int Num { get; set; }
 		public List<Advance> Advances;
 
+		public Rank()
+		{
+			Name = "";
+			Num = 0;
+			Advances = new List<Advance>();
+		}
 		public Rank(string name, int num, List<Advance> advances)
 		{
 			Name = name;

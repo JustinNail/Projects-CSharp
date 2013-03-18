@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Dark_Heresy_Generator
+namespace DarkHeresyCharacter
 {
 	[Serializable()]
-	class Stat
+	public class Stat
 	{
 		public int Value 
 		{ 
@@ -17,6 +17,11 @@ namespace Dark_Heresy_Generator
 		}
 		public int Base { get; set; }
 		public int Roll { get; set; }
+		public Stat()
+		{
+			Base = 0;
+			Roll = 0;
+		}
 		public Stat( int b, int r)
 		{
 			Base = b;

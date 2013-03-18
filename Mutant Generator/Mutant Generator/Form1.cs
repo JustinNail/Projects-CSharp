@@ -8,7 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using System.IO;
+
+using DarkHeresyCharacter;
 
 
 namespace Dark_Heresy_Generator
@@ -405,12 +408,13 @@ namespace Dark_Heresy_Generator
 		{
 			string[] attributes = Background_comboBox.SelectedItem.ToString().Split(':');
 			Character.Background.Name = attributes.First();
-			Character.Background.Cost = attributes.Last(s => s != "");
-
+			string Cost = attributes.Last(s => s != "");
+			Character.Background.Cost = int.Parse(Cost.Substring(0, 4));
 			Background_Selection();
 		}
 		private void Background_Selection()
 		{
+			Character.XP_Spent = Character.Background.Cost;
 			Add_Back_Stats();
 			Add_Back_Skills();
 			Add_Back_Talents();
@@ -848,6 +852,231 @@ namespace Dark_Heresy_Generator
 		{
 			Reset();
 		}
+		private void Random_Button_Click(object sender, EventArgs e)
+		{
+			Reset();
+
+			#region Origin
+			var origins = from s in Origins.Element("root").Elements()
+						  select s;
+			int selection = Dice.Next(origins.Count());
+			string OName = origins.ElementAt(selection).Attribute("name").Value;
+			string OBase = origins.ElementAt(selection).Attribute("base").Value;
+			Character.Origin.Name = OName;
+			Character.Origin.Base = OBase;
+
+			Origin_comboBox.SelectedItem = Character.Origin.Name;
+			Origin_comboBox.Update();
+			#endregion
+			Roll();
+			#region Career
+			List<Career> careerChoices = new List<Career>();
+			XElement origin = GetOrigin();
+			IEnumerable<string> careers = from career in origin.Element("careers").Elements()
+										  where career.Attribute("available").Value == "True"
+										  select career.Attribute("name").Value;
+
+			IEnumerable<XElement> query = from career in Careers.Element("root").Elements()
+										  where careers.Contains<string>(career.Attribute("base").Value)
+										  select career;
+
+			foreach (XElement career in query)
+			{
+				bool available = true;
+				if (career.Element("requirements").Elements().Count() > 0)
+				{
+					foreach (XElement requirement in career.Element("requirements").Elements())
+					{
+						#region Type Switch
+						switch (requirement.Attribute("type").Value)
+						{
+							case "origin, specific":
+								if (requirement.Attribute("name").Value !=
+									origin.Attribute("name").Value)
+								{
+									available = false;
+								}
+								break;
+							case "origin, general":
+								IEnumerable<string> names = from name in requirement.Attributes()
+															where (name.Name == "name" ||
+																	name.Name == "name1" ||
+																	name.Name == "name2")
+															select name.Value;
+								if (!names.Contains<string>(origin.Attribute("base").Value))
+								{
+									available = false;
+								}
+								break;
+							case "stat":
+								#region Stat Switch
+								switch (requirement.Attribute("name").Value)
+								{
+									case "WS":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(WS_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "BS":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(BS_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "S":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(S_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "T":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(T_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Ag":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Ag_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Int":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Int_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Per":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Per_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Wp":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Wp_Box.Text))
+										{
+											available = false;
+										}
+										break;
+									case "Fel":
+										if (int.Parse(requirement.Attribute("amount").Value)
+											> int.Parse(Fel_Box.Text))
+										{
+											available = false;
+										}
+										break;
+								}
+								#endregion
+								break;
+						}
+						#endregion
+					}
+				}
+				if (available)
+				{
+					careerChoices.Add(new Career(career.Attribute("name").Value, career.Attribute("base").Value));
+				}
+			}
+			Character.Career = careerChoices.ElementAt(Dice.Next(careerChoices.Count));
+
+			string careername = "";
+			if (Character.Career.Name != Character.Career.Base)
+			{
+				careername = Character.Career.Name + "(" + Character.Career.Base + ")";
+			}
+			else
+			{
+				careername = Character.Career.Name;
+			}
+			Career_comboBox.SelectedItem = careername;
+			#endregion
+			#region Background
+			if (Dice.Next() % 2 == 0)
+			{
+				XElement career = GetCareer();
+				var backs = from back in career.Element("backgrounds").Elements()
+							where back.Attribute("origin").Value.Contains(origin.Attribute("base").Value)
+							select back;
+				XElement background = backs.ElementAt(Dice.Next(backs.Count()));
+				Character.Background.Name = background.Attribute("name").Value;
+				Character.Background.Cost = int.Parse(background.Attribute("cost").Value);
+
+				Background_comboBox.SelectedItem = Character.Background.Name + ": " + Character.Background.Cost.ToString() + "xp";
+			}
+			#endregion
+			#region Name
+			if (Character.Origin.Name == "Hive Mutant")
+			{
+				Character.NameType = "Mutant";
+			}
+			else
+			{
+				var names = from name in Names.Element("root").Elements()
+							where (string)(name.Attribute("type").Value) ==
+									(string)(Character.Sex)
+							select name;
+				names = from name in names.Elements()
+						where name.Attribute("type").Value != "Mutant"
+						select name;
+
+				Character.NameType = names.ElementAt(Dice.Next(names.Count())).Attribute("type").Value;
+			}
+			Name_comboBox.SelectedItem = Character.NameType;
+			#endregion
+		}
+		private void Appearance_Button_Click(object sender, EventArgs e)
+		{
+			#region Appearance
+			Name_Box.Clear();
+			Sex_Box.Clear();
+			Build_Box.Clear();
+			Age_Box.Clear();
+			Skin_Box.Clear();
+			Hair_Box.Clear();
+			Eye_Box.Clear();
+			Quirk_Box.Clear();
+			#endregion
+			Set_Sex();
+			Add_Appearance();
+			CharacterUpdate();
+		}
+		private void Save_Button_Click(object sender, EventArgs e)
+		{
+			Stream SaveStream;
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+			saveFileDialog1.FileName = Name_Box.Text + ".DHC";
+			saveFileDialog1.Filter = "Dark Heresy Character (*.DHC)|*.DHC";
+			saveFileDialog1.FilterIndex = 1;
+			saveFileDialog1.RestoreDirectory = true;
+
+			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+			{
+				if ((SaveStream = saveFileDialog1.OpenFile()) != null)
+				{
+					try
+					{
+						XmlSerializer serializer = new XmlSerializer(typeof(DHCharacter));
+						serializer.Serialize(SaveStream, Character);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message);
+					}
+				}
+				SaveStream.Close();
+			}
+		}	
 		private void Roll_button_Click(object sender, EventArgs e)
 		{
 			Roll();
@@ -970,11 +1199,11 @@ namespace Dark_Heresy_Generator
 				}
 				DialogBoxList SkillDialog = new DialogBoxList(SkillList);
 				SkillDialog.ShowDialog();
-				Character.Skills.Add(new Skill(SkillDialog.selection, skill.Parent.Parent.Name.ToString()));
+				Character.Skills.Add(new Skill(SkillDialog.selection, skill.Parent.Parent.Name.LocalName));
 			}
 			else
 			{
-				Character.Skills.Add(new Skill(skill.Attribute("choice").Value, skill.Parent.Parent.Name.ToString()));
+				Character.Skills.Add(new Skill(skill.Attribute("choice").Value, skill.Parent.Parent.Name.LocalName));
 			}
 		}
 		private void Add_Talent(XElement talent)
@@ -988,22 +1217,22 @@ namespace Dark_Heresy_Generator
 				}
 				DialogBoxList TalentDialog = new DialogBoxList(TalentList);
 				TalentDialog.ShowDialog();
-				Character.Talents.Add(new Talent(TalentDialog.selection, talent.Parent.Parent.Name.ToString()));
+				Character.Talents.Add(new Talent(TalentDialog.selection, talent.Parent.Parent.Name.LocalName));
 			}
 			else
 			{
-				Character.Talents.Add(new Talent(talent.Attribute("choice").Value, talent.Parent.Parent.Name.ToString()));
+				Character.Talents.Add(new Talent(talent.Attribute("choice").Value, talent.Parent.Parent.Name.LocalName));
 			}
 		}
 		private void Add_Trait(XElement trait)
 		{
 			Character.Traits.Add(new Trait(trait.Attribute("name").Value,trait.Attribute("effect").Value,
-				trait.Parent.Parent.Name.ToString()));
+				trait.Parent.Parent.Name.LocalName));
 			if (trait.Attribute("name").Value == "Sanctioned Psyker")
 			{
 				string SideEffect = SanctioningSideEffects();
 				Character.Traits.Add(new Trait("Sanctioning Side Effect:", SideEffect, 
-					trait.Parent.Parent.Name.ToString()));
+					trait.Parent.Parent.Name.LocalName));
 			}
 			if (trait.Attribute("name").Value == "Twist")
 			{
@@ -1145,11 +1374,11 @@ namespace Dark_Heresy_Generator
 				}
 				DialogBoxList EquipDialog = new DialogBoxList(EquipList);
 				EquipDialog.ShowDialog();
-				Character.Gear.Add(new Equipment(EquipDialog.selection, equip.Parent.Parent.Name.ToString()));
+				Character.Gear.Add(new Equipment(EquipDialog.selection, equip.Parent.Parent.Name.LocalName));
 			}
 			else
 			{
-				Character.Gear.Add(new Equipment(equip.Attribute("choice").Value, equip.Parent.Parent.Name.ToString()));
+				Character.Gear.Add(new Equipment(equip.Attribute("choice").Value, equip.Parent.Parent.Name.LocalName));
 			}
 		}
 		#endregion
@@ -1533,7 +1762,7 @@ namespace Dark_Heresy_Generator
 			XElement back = GetBackground();
 			if(back.Element("gear").Elements().Count()>0)
 			{
-				Gear_Box.Clear();
+				Character.Gear.Clear();
 				foreach (XElement equip in back.Element("gear").Elements())
 				{
 					Add_Gear(equip);
@@ -1544,30 +1773,37 @@ namespace Dark_Heresy_Generator
 		{
 			XElement back = GetBackground();
 			
-			if (back.Element("wealth").Elements().Count() > 0)
+			foreach (XElement element in back.Element("wealth").Elements())
 			{
-				switch (back.Element("wealth").Element("thrones").Attribute("type").Value)
+				switch (element.Name.ToString())
 				{
-					case "*":
-						Character.Thrones *= int.Parse(back.Element("wealth").Element("thrones").Attribute("mod").Value);
+					case "thrones":
+						switch (back.Element("wealth").Element("thrones").Attribute("type").Value)
+						{
+							case "*":
+								Character.Thrones *= int.Parse(back.Element("wealth").Element("thrones").Attribute("mod").Value);
+								break;
+							case "/":
+								Character.Thrones /= int.Parse(back.Element("wealth").Element("thrones").Attribute("mod").Value);
+								break;
+							case "+":
+								Character.Thrones += int.Parse(back.Element("wealth").Element("thrones").Attribute("mod").Value);
+								break;
+							case "-":
+								Character.Thrones -= int.Parse(back.Element("wealth").Element("thrones").Attribute("mod").Value);
+								break;
+						}
 						break;
-					case "/":
-						Character.Thrones /= int.Parse(back.Element("wealth").Element("thrones").Attribute("mod").Value);
-						break;
-					case "+":
-						Character.Thrones += int.Parse(back.Element("wealth").Element("thrones").Attribute("mod").Value);
-						break;
-					case "-":
-						Character.Thrones -= int.Parse(back.Element("wealth").Element("thrones").Attribute("mod").Value);
-						break;
-				}
-				switch (back.Element("wealth").Element("income").Attribute("type").Value)
-				{
-					case "replace":
-						Character.Income = back.Element("wealth").Element("income").Attribute("name").Value;
-						break;
-					case "add":
-						Character.Income +=" And "+ (back.Element("wealth").Element("income").Attribute("name").Value);
+					case "income":
+						switch (back.Element("wealth").Element("income").Attribute("type").Value)
+						{
+							case "replace":
+								Character.Income = back.Element("wealth").Element("income").Attribute("name").Value;
+								break;
+							case "add":
+								Character.Income +=" And "+ (back.Element("wealth").Element("income").Attribute("name").Value);
+								break;
+						}
 						break;
 				}
 			}
@@ -2289,7 +2525,7 @@ namespace Dark_Heresy_Generator
 			list.Add("Concealment(Ag)");
 			list.Add("Gamble(Int)");
 			list.Add("Evaluate(Int)");
-			list.Add("Tech-Use(Int(");
+			list.Add("Tech-Use(Int)");
 			
 			DialogBoxList ChoiceDialog = new DialogBoxList(list);
 			ChoiceDialog.ShowDialog();
@@ -2302,7 +2538,7 @@ namespace Dark_Heresy_Generator
 			list1.Add("Concealment(Ag)");
 			list1.Add("Gamble(Int)");
 			list1.Add("Evaluate(Int)");
-			list1.Add("Tech-Use(Int(");
+			list1.Add("Tech-Use(Int)");
 			for (int i = 0; i < list1.Count; i++)
 			{
 				if (list1.ElementAt(i) == ChoiceDialog.selection)
@@ -2311,7 +2547,7 @@ namespace Dark_Heresy_Generator
 				}
 			}
 
-			DialogBoxList ChoiceDialog1 = new DialogBoxList(list);
+			DialogBoxList ChoiceDialog1 = new DialogBoxList(list1);
 			ChoiceDialog1.ShowDialog();
 
 			Character.Skills.Add(new Skill(ChoiceDialog1.selection, "background"));
@@ -2376,8 +2612,6 @@ namespace Dark_Heresy_Generator
 
 		private void CharacterUpdate()
 		{
-			
-
 			#region Base Boxes
 			WS_Base_Box.Text = Character.WS.Base.ToString();
 			BS_Base_Box.Text = Character.BS.Base.ToString();
@@ -2413,7 +2647,9 @@ namespace Dark_Heresy_Generator
 			#endregion
 
 			Wounds_Box.Text = Character.Wounds.ToString();
+			Character.CurWounds = Character.Wounds;
 			Fate_Box.Text = Character.Fate.ToString();
+			Character.CurFate = Character.Fate;
 			Insanity_Box.Text = Character.Insanity.ToString();
 			Corruption_Box.Text = Character.Corruption.ToString();
 
@@ -2472,6 +2708,12 @@ namespace Dark_Heresy_Generator
 		private void Reset()
 		{
 			Character.Reset();
+
+			//Origin_comboBox.ResetText();
+			Career_comboBox.ResetText();
+			Background_comboBox.ResetText();
+			Name_comboBox.ResetText();
+
 			Career_comboBox.Items.Clear();
 			Background_comboBox.Items.Clear();
 			Divination_Box.Clear();
@@ -2482,247 +2724,5 @@ namespace Dark_Heresy_Generator
 			Roll_button.Enabled = false;
 			Reroll_Disable();
 		}
-
-		private void Random_Button_Click(object sender, EventArgs e)
-		{
-			Reset();
-			#region Origin
-			var origins = from s in Origins.Element("root").Elements()
-						  select s;
-			int selection = Dice.Next(origins.Count());
-			string OName = origins.ElementAt(selection).Attribute("name").Value;
-			string OBase = origins.ElementAt(selection).Attribute("base").Value;
-			Character.Origin.Name = OName;
-			Character.Origin.Base = OBase;
-			
-			Origin_comboBox.SelectedItem = Character.Name;
-
-			Origin_Selection();
-			#endregion
-			Roll();
-			#region Career
-			List<Career> careerChoices = new List<Career>();
-			XElement origin = GetOrigin();
-			IEnumerable<string> careers = from career in origin.Element("careers").Elements()
-										  where career.Attribute("available").Value == "True"
-										  select career.Attribute("name").Value;
-
-			IEnumerable<XElement> query = from career in Careers.Element("root").Elements()
-										  where careers.Contains<string>(career.Attribute("base").Value)
-										  select career;
-
-			foreach (XElement career in query)
-			{
-				bool available = true;
-				if (career.Element("requirements").Elements().Count() > 0)
-				{
-					foreach (XElement requirement in career.Element("requirements").Elements())
-					{
-						#region Type Switch
-						switch (requirement.Attribute("type").Value)
-						{
-							case "origin, specific":
-								if (requirement.Attribute("name").Value !=
-									origin.Attribute("name").Value)
-								{
-									available = false;
-								}
-								break;
-							case "origin, general":
-								IEnumerable<string> names = from name in requirement.Attributes()
-															where (name.Name == "name" ||
-																	name.Name == "name1" ||
-																	name.Name == "name2")
-															select name.Value;
-								if (!names.Contains<string>(origin.Attribute("base").Value))
-								{
-									available = false;
-								}
-								break;
-							case "stat":
-								#region Stat Switch
-								switch (requirement.Attribute("name").Value)
-								{
-									case "WS":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(WS_Box.Text))
-										{
-											available = false;
-										}
-										break;
-									case "BS":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(BS_Box.Text))
-										{
-											available = false;
-										}
-										break;
-									case "S":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(S_Box.Text))
-										{
-											available = false;
-										}
-										break;
-									case "T":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(T_Box.Text))
-										{
-											available = false;
-										}
-										break;
-									case "Ag":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(Ag_Box.Text))
-										{
-											available = false;
-										}
-										break;
-									case "Int":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(Int_Box.Text))
-										{
-											available = false;
-										}
-										break;
-									case "Per":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(Per_Box.Text))
-										{
-											available = false;
-										}
-										break;
-									case "Wp":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(Wp_Box.Text))
-										{
-											available = false;
-										}
-										break;
-									case "Fel":
-										if (int.Parse(requirement.Attribute("amount").Value)
-											> int.Parse(Fel_Box.Text))
-										{
-											available = false;
-										}
-										break;
-								}
-								#endregion
-								break;
-						}
-						#endregion
-					}
-				}
-				if (available)
-				{
-					careerChoices.Add(new Career(career.Attribute("name").Value, career.Attribute("base").Value));
-				}
-			}
-			Character.Career = careerChoices.ElementAt(Dice.Next(careerChoices.Count));
-			
-			string careername = "";
-			if (Character.Career.Name != Character.Career.Base)
-			{
-				careername = Character.Career.Name + "(" + Character.Career.Base + ")";
-			}
-			else
-			{
-				careername = Character.Career.Name;
-			}
-			Career_comboBox.SelectedItem = careername;
-
-			Career_Selection();
-			#endregion
-			#region Background
-			if (Dice.Next() % 2 == 0)
-			{
-				XElement career = GetCareer();
-				var backs = from back in career.Element("backgrounds").Elements()
-							where back.Attribute("origin").Value.Contains(origin.Attribute("base").Value)
-							select back;
-				XElement background = backs.ElementAt(Dice.Next(backs.Count()));
-				Character.Background.Name = background.Attribute("name").Value;
-				Character.Background.Cost = background.Attribute("cost").Value;
-				
-				Background_comboBox.SelectedItem = Character.Background.Name + ": " + Character.Background.Cost;
-
-				Background_Selection();
-			}
-			#endregion
-			#region Name
-			if (Character.Origin.Name == "Hive Mutant")
-			{
-				Character.NameType = "Mutant";
-			}
-			else
-			{
-				var names = from name in Names.Element("root").Elements()
-							where (string)(name.Attribute("type").Value) ==
-									(string)(Character.Sex)
-							select name;
-				names = from name in names.Elements()
-						where name.Attribute("type").Value != "Mutant"
-						select name;
-
-				Character.NameType = names.ElementAt(Dice.Next(names.Count())).Attribute("type").Value;
-			}
-			Name_Selection();
-			#endregion
-		}
-		private void Appearance_Button_Click(object sender, EventArgs e)
-		{
-			#region Appearance
-			Name_Box.Clear();
-			Sex_Box.Clear();
-			Build_Box.Clear();
-			Age_Box.Clear();
-			Skin_Box.Clear();
-			Hair_Box.Clear();
-			Eye_Box.Clear();
-			Quirk_Box.Clear();
-			#endregion
-			Set_Sex();
-			Add_Appearance();
-			CharacterUpdate();
-		}
-
-		private void Save_Button_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				// create new memory stream
-				System.IO.MemoryStream MStream = new System.IO.MemoryStream();
-
-				// create new BinaryFormatter
-				System.Runtime.Serialization.Formatters.Binary.BinaryFormatter _BinaryFormatter
-							= new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-
-				// Serializes an object, or graph of connected objects, to the given stream.
-				_BinaryFormatter.Serialize(MStream, Character);
-
-				// convert stream to byte array
-				byte[] _ByteArray = MStream.ToArray();
-
-				// Open file for writing
-				System.IO.FileStream Fstream = new System.IO.FileStream(Character.Name+".DHC", System.IO.FileMode.Create, System.IO.FileAccess.Write);
-
-				// Writes a block of bytes to this stream using data from a byte array.
-				Fstream.Write(_ByteArray.ToArray(), 0, _ByteArray.Length);
-
-				// close file stream
-				Fstream.Close();
-
-				// cleanup
-				MStream.Close();
-				MStream.Dispose();
-				MStream = null;
-				_ByteArray = null;
-			}
-			catch (Exception _Exception)
-			{
-				// Error
-				Console.WriteLine("Exception caught in process: {0}", _Exception.ToString());
-			}
-		}	
 	}
 }
