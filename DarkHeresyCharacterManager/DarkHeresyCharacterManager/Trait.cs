@@ -10,15 +10,14 @@ namespace DarkHeresyCharacter
 	{
 		public string Name { get; set; }
 		public string Effect { get; set; }
-		public string Source { get; set; }
+		public Source Source { get; set; }
 
 		public Trait()
 		{
 			Name = "";
 			Effect = "";
-			Source = "";
 		}
-		public Trait(string n, string e, string s)
+		public Trait(string n, string e, Source s)
 		{
 			Name = n;
 			Effect = e;

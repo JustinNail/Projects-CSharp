@@ -8,26 +8,26 @@ namespace DarkHeresyCharacter
 	[Serializable()]
 	public class DHCharacter
 	{
-		public Stat WS = new Stat(0, 0);
-		public Stat BS = new Stat(0, 0);
-		public Stat S = new Stat(0, 0);
-		public Stat T = new Stat(0, 0);
-		public Stat Ag = new Stat(0, 0);
-		public Stat Int = new Stat(0, 0);
-		public Stat Per = new Stat(0, 0);
-		public Stat Wp = new Stat(0, 0);
-		public Stat Fel = new Stat(0, 0);
+		public Stat WS = new Stat();
+		public Stat BS = new Stat();
+		public Stat S = new Stat();
+		public Stat T = new Stat();
+		public Stat Ag = new Stat();
+		public Stat Int = new Stat();
+		public Stat Per = new Stat();
+		public Stat Wp = new Stat();
+		public Stat Fel = new Stat();
 
 		public int XP_Spent { get; set; }
 
 		public List<Rank> Ranks = new List<Rank>();
 
-		public int Wounds { get; set; }
+		public Stat Wounds = new Stat();
 		public int CurWounds { get; set; }
-		public int Fate { get; set; }
+		public Stat Fate = new Stat();
 		public int CurFate { get; set; }
-		public int Insanity { get; set; }
-		public int Corruption { get; set; }
+		public Stat Insanity = new Stat();
+		public Stat Corruption = new Stat();
 
 		public Origin Origin = new Origin("","");
 		public Career Career = new Career("","");
@@ -66,12 +66,12 @@ namespace DarkHeresyCharacter
 
 			XP_Spent = 0;
 
-			Wounds = 0;
+			Wounds.Reset();
 			CurWounds = 0;
-			Fate = 0;
+			Fate.Reset();
 			CurFate = 0;
-			Insanity = 0;
-			Corruption = 0;
+			Insanity.Reset();
+			Corruption.Reset();
 
 			Career.Reset();
 			Background.Reset();

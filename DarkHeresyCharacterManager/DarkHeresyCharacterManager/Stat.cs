@@ -15,22 +15,32 @@ namespace DarkHeresyCharacter
 				return Base + Roll;
 			}
 		}
-		public int Base { get; set; }
+		public int Base
+		{
+			get
+			{
+				return OriginBase + CareerMod + BackMod + DivMod;
+			}
+		}
+		public int OriginBase { get; set; }
+		public int CareerMod { get; set; }
+		public int BackMod { get; set; }
+		public int DivMod { get; set; }
 		public int Roll { get; set; }
 		public Stat()
 		{
-			Base = 0;
+			OriginBase = 0;
+			CareerMod = 0;
+			BackMod = 0;
+			DivMod = 0;
 			Roll = 0;
 		}
-		public Stat( int b, int r)
-		{
-			Base = b;
-			Roll = r;
-		}
-
 		public void Reset()
 		{
-			Base = 0;
+			OriginBase = 0;
+			CareerMod = 0;
+			BackMod = 0;
+			DivMod = 0;
 			Roll = 0;
 		}
 	}

@@ -9,13 +9,12 @@ namespace DarkHeresyCharacter
 	public class Equipment
 	{
 		public string Name { get; set; }
-		public string Source { get; set; }
+		public Source Source { get; set; }
 		public Equipment()
 		{
 			Name = "";
-			Source = "";
 		}
-		public Equipment(string n, string s)
+		public Equipment(string n, Source s)
 		{
 			Name = n;
 			Source = s;

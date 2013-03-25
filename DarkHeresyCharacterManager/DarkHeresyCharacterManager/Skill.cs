@@ -9,14 +9,13 @@ namespace DarkHeresyCharacter
 	public class Skill
 	{
 		public string Name { get; set; }
-		public string Source { get; set; }
+		public Source Source { get; set; }
 
 		public Skill()
 		{
 			Name = "";
-			Source = "";
 		}
-		public Skill(string n, string s)
+		public Skill(string n, Source s)
 		{
 			Name = n;
 			Source = s;

@@ -63,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rank.cs" />
     <Compile Include="Skill.cs" />
+    <Compile Include="Source.cs" />
     <Compile Include="Stat.cs" />
     <Compile Include="Talent.cs" />
     <Compile Include="Trait.cs" />
