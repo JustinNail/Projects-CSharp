@@ -8,6 +8,7 @@ namespace DarkHeresyCharacter
 	[Serializable()]
 	public class DHCharacter
 	{
+		
 		public Stat WS = new Stat();
 		public Stat BS = new Stat();
 		public Stat S = new Stat();

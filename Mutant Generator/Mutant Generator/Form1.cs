@@ -45,17 +45,32 @@ namespace Dark_Heresy_Generator
 			Fill_Origin_comboBox();
 		}
 
+		#region Get methods
+		/// <summary>
+		/// queries the Origins document for the element that matches the character's origin
+		/// </summary>
+		/// <returns>XElement equal to query result, returns an empty XElement if not found</returns>
 		private XElement GetOrigin()
 		{
-			//query variable
 			IEnumerable<XElement> query;
 
 			query = from origin in Origins.Element("root").Elements()
 					where (string)(origin.Attribute("name").Value) == Character.Origin.Name
 					select origin;
-
-			return query.ElementAt(0);
+			if (query.Elements().Count() > 0)
+			{
+				return query.ElementAt(0);
+			}
+			else
+			{
+				XName empty = "";
+				return new XElement(empty);
+			}
 		}
+		/// <summary>
+		/// queries the Careers document for the element that matches the character's career
+		/// </summary>
+		/// <returns>XElement equal to query result, returns an empty XElement if not found</returns>
 		private XElement GetCareer()
 		{
 			//query variable
@@ -65,9 +80,21 @@ namespace Dark_Heresy_Generator
 					where (((career.Attribute("name").Value) == Character.Career.Name) &&
 							((career.Attribute("base").Value) == Character.Career.Base))
 					select career;
-			return query.ElementAt(0);
+			if (query.Elements().Count() > 0)
+			{
+				return query.ElementAt(0);
+			}
+			else
+			{
+				XName empty = "";
+				return new XElement(empty);
+			}
 			
 		}
+		/// <summary>
+		/// queries the Career element (See GetCareer) for the element that matches the character's Background
+		/// </summary>
+		/// <returns>XElement equal to query result, returns an empty XElement if not found</returns>
 		private XElement GetBackground()
 		{
 			IEnumerable<XElement> query;
@@ -77,9 +104,22 @@ namespace Dark_Heresy_Generator
 					where (string)(back.Attribute("name").Value) == Character.Background.Name
 					select back;
 
-			return query.ElementAt(0);
+			if (query.Elements().Count() > 0)
+			{
+				return query.ElementAt(0);
+			}
+			else
+			{
+				XName empty = "";
+				return new XElement(empty);
+			}
 		}
+		#endregion
 
+		/// <summary>
+		/// Sets the character's stats' OriginBase values to the values in the Origins document 
+		/// based on the character's origin
+		/// </summary>
 		private void Fill_Base_Stats()
 		{
 			XElement origin = GetOrigin();
@@ -95,6 +135,11 @@ namespace Dark_Heresy_Generator
 		}
 
 		#region Combo Boxes
+		#region fills
+		/// <summary>
+		/// fills the Name_ComboBox with the correct options from the Names document based on Sex,
+		/// with Hive Mutants having a special case
+		/// </summary>
 		private void Fill_Name_comboBox()
 		{
 			Name_comboBox.Items.Clear();
@@ -119,18 +164,23 @@ namespace Dark_Heresy_Generator
 				Name_comboBox.Items.Add(name.Attribute("type").Value);
 			}
 		}
+		/// <summary>
+		/// Fills the Origin_ComboBox with the name of every origin element in the Origins Document
+		/// </summary>
 		private void Fill_Origin_comboBox()
 		{
-			Origin_comboBox.Items.Clear();//clear the box
-			//select every origin
+			Origin_comboBox.Items.Clear();
 			var origins = from origin in Origins.Element("root").Elements()
 						  select origin;
-			//add each origin's name to box
 			foreach (XElement origin in origins)
 			{
 				Origin_comboBox.Items.Add(origin.Attribute("name").Value);
 			}
 		}
+		/// <summary>
+		/// Fills the Career_ComboBox with careers based on the character's origin and if it meets 
+		/// any requirements specific careers have
+		/// </summary>
 		private void Fill_Career_comboBox()
 		{
 			XElement origin = GetOrigin();
@@ -259,6 +309,10 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// Fills the Background_ComboBox with backgrounds based on the character's 
+		/// career, origin, and other prerequisites a specific background might have
+		/// </summary>
 		private void Fill_Background_comboBox()
 		{
 			Background_comboBox.Items.Clear();
@@ -269,7 +323,6 @@ namespace Dark_Heresy_Generator
 			var backs = from back in career.Element("backgrounds").Elements()
 						where back.Attribute("origin").Value.Contains(origin.Attribute("base").Value)
 					select back;
-			//add each name type to box
 			foreach (XElement back in backs)
 			{
 				Background_comboBox.Items.Add(back.Attribute("name").Value + ": " + 
@@ -277,6 +330,16 @@ namespace Dark_Heresy_Generator
 			}
 			
 		}
+		#endregion
+
+		#region selections
+		#region origin
+		/// <summary>
+		/// Method triggered when the Origin_ComboBox selection is changed. 
+		/// The character's Origin properties are set and the Origin_Selection method is called
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Origin_comboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Character.Origin.Name = Origin_comboBox.SelectedItem.ToString();
@@ -289,6 +352,10 @@ namespace Dark_Heresy_Generator
 
 			Appearance_Button.Enabled = true;
 		}
+		/// <summary>
+		/// Automatically resets the character and updates the character's origin based properties.
+		/// Rolls a random appearance for the character
+		/// </summary>
 		private void Origin_Selection()
 		{
 			Reset();
@@ -306,6 +373,17 @@ namespace Dark_Heresy_Generator
 			Roll_button.Enabled = true;
 			CharacterUpdate();
 		}
+		#endregion
+
+		#region career
+		/// <summary>
+		/// Method triggered when the Career_ComboBox selection is changed. 
+		/// CareerReset method called, 
+		/// the character's Career properties are set and 
+		/// the Career_Selection method is called
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Career_comboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			CareerReset();
@@ -314,6 +392,10 @@ namespace Dark_Heresy_Generator
 			Character.Career.Base = attributes.Last(s=> s != "");
 			Career_Selection();
 		}
+		/// <summary>
+		/// sets the character's career based properties and rolls the Divination.
+		/// changes character's sex (and appearance) if the career has a restriction
+		/// </summary>
 		private void Career_Selection()
 		{
 			Add_Career_Skills();
@@ -375,11 +457,23 @@ namespace Dark_Heresy_Generator
 			CharacterUpdate();
 			Fill_Background_comboBox();
 		}
+		#endregion
+
+		#region name
+		/// <summary>
+		/// Method triggered when the Origin_ComboBox selection is changed. 
+		/// The character's Name is set and the Name_Selection method is called
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Name_comboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Character.NameType = Name_comboBox.SelectedItem.ToString();
 			Name_Selection();
 		}
+		/// <summary>
+		/// picks a random name based on the selected name type in the Name_ComboBox and character's sex
+		/// </summary>
 		private void Name_Selection()
 		{
 			if (Character.NameType == "Mutant")
@@ -405,6 +499,17 @@ namespace Dark_Heresy_Generator
 			}
 			CharacterUpdate();
 		}
+		#endregion
+
+		#region background
+		/// <summary>
+		/// Method triggered when the Career_ComboBox selection is changed. 
+		/// BackgroundReset method called, 
+		/// the character's Background properties are set and 
+		/// the Background_Selection method is called
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Background_comboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			BackReset();
@@ -414,6 +519,9 @@ namespace Dark_Heresy_Generator
 			Character.Background.Cost = int.Parse(Cost.Substring(0, 4));
 			Background_Selection();
 		}
+		/// <summary>
+		/// sets the character's background based properties
+		/// </summary>
 		private void Background_Selection()
 		{
 			Character.XP_Spent = Character.Background.Cost;
@@ -437,51 +545,22 @@ namespace Dark_Heresy_Generator
 			CharacterUpdate();
 		}
 		#endregion
+		#endregion
+		#endregion
 
 		#region Rolls
-		private void WS_Roll()
-		{
-			Character.WS.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-		private void BS_Roll()
-		{
-			Character.BS.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-		private void S_Roll()
-		{
-			Character.S.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-		private void T_Roll()
-		{
-			Character.T.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-		private void Ag_Roll()
-		{
-			Character.Ag.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-		private void Int_Roll()
-		{
-			Character.Int.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-		private void Per_Roll()
-		{
-			Character.Per.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-		private void Wp_Roll()
-		{
-			Character.Wp.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-		private void Fel_Roll()
-		{
-			Character.Fel.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
-		}
-
+		/// <summary>
+		/// sets the character's wound stat's properties
+		/// </summary>
 		private void Wound_Roll()
 		{
 			XElement origin = GetOrigin();
 			Character.Wounds.Roll = Dice.Next(1, 6);
 			Character.Wounds.OriginBase= int.Parse(origin.Element("basestats").Element("Wounds").Value);
 		}
+		/// <summary>
+		/// sets the character's fate stat's properties
+		/// </summary>
 		private void Fate_Roll()
 		{
 			int result = Dice.Next(1, 11);
@@ -495,7 +574,9 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
-
+		/// <summary>
+		/// sets the character's insanity stat's properties
+		/// </summary>
 		private void Insanity_Roll(int num, int size, int Base, Source source)
 		{
 			int roll=0;
@@ -517,6 +598,9 @@ namespace Dark_Heresy_Generator
 					break;
 			}
 		}
+		/// <summary>
+		/// sets the character's corruption stat's properties
+		/// </summary>
 		private void Corruption_Roll(int num, int size, int Base, Source source)
 		{
 			int roll = 0;
@@ -539,6 +623,10 @@ namespace Dark_Heresy_Generator
 			}
 		}
 
+		/// <summary>
+		/// randomly determines the character's divination, 
+		/// sets a delegate based on the result for the apply button to use later, if pressed
+		/// </summary>
 		private void Divination_Roll()
 		{
 			switch (Dice.Next(1, 101))
@@ -805,9 +893,40 @@ namespace Dark_Heresy_Generator
 					break;
 			}
 		}
+
+		/// <summary>
+		/// rolls the character's stats and calls Fill_Career_ComboBox
+		/// enables the Re-roll buttons in the Characteristics area
+		/// </summary>
+		private void Roll()
+		{
+			Career_comboBox.Items.Clear();
+			Character.WS.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+			Character.BS.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+			Character.S.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+			Character.T.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+			Character.Ag.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+			Character.Int.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+			Character.Per.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+			Character.Wp.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+			Character.Fel.Roll = Dice.Next(1, 11) + Dice.Next(1, 11);
+
+			Wound_Roll();
+			Fate_Roll();
+
+			Reroll_Enable();
+			CharacterUpdate();
+			Fill_Career_comboBox();
+		}
 		#endregion
 
 		#region Buttons
+		/// <summary>
+		/// Method triggered by pressing the Export Button
+		/// Writes the character's Data to a text file
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Export_Button_Click(object sender, EventArgs e)
 		{
 			Stream ExportStream;
@@ -873,10 +992,22 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// Method triggered by pressing the Reset Button
+		/// Calls Reset function
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Reset_Button_Click(object sender, EventArgs e)
 		{
 			Reset();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Randomize Button
+		/// Randomly determines almost all of the character's attributes
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Random_Button_Click(object sender, EventArgs e)
 		{
 			Reset();
@@ -1059,6 +1190,12 @@ namespace Dark_Heresy_Generator
 			Name_comboBox.SelectedItem = Character.NameType;
 			#endregion
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-roll Button in the appearance area
+		/// clears the current appearance and generates a new one
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Appearance_Button_Click(object sender, EventArgs e)
 		{
 			#region Appearance
@@ -1075,6 +1212,12 @@ namespace Dark_Heresy_Generator
 			Add_Appearance();
 			CharacterUpdate();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Save Button
+		/// serializes the character using XML serialization for use with a later program
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Save_Button_Click(object sender, EventArgs e)
 		{
 			Stream SaveStream;
@@ -1101,85 +1244,129 @@ namespace Dark_Heresy_Generator
 				}
 				SaveStream.Close();
 			}
-		}	
+		}
+		/// <summary>
+		/// Method triggered by pressing the Roll Button
+		/// Calls the Roll method
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Roll_button_Click(object sender, EventArgs e)
 		{
 			Roll();
 		}
-		private void Roll()
-		{
-			Career_comboBox.Items.Clear();
-			WS_Roll();
-			BS_Roll();
-			S_Roll();
-			T_Roll();
-			Ag_Roll();
-			Int_Roll();
-			Per_Roll();
-			Wp_Roll();
-			Fel_Roll();
 
-			Wound_Roll();
-			Fate_Roll();
-
-			Reroll_Enable();
-			CharacterUpdate();
-			Fill_Career_comboBox();
-		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the WS boxes
+		/// Re-rolls the character's WS, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void WS_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			WS_Roll();
+			Character.WS.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the BS boxes
+		/// Re-rolls the character's BS, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void BS_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			BS_Roll();
+			Character.BS.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the S boxes
+		/// Re-rolls the character's S, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void S_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			S_Roll();
+			Character.S.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the T boxes
+		/// Re-rolls the character's T, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void T_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			T_Roll();
+			Character.T.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the Ag boxes
+		/// Re-rolls the character's Ag, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Ag_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			Ag_Roll();
+			Character.Ag.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the Int boxes
+		/// Re-rolls the character's Int, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Int_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			Int_Roll();
+			Character.Int.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the Per boxes
+		/// Re-rolls the character's Per, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Per_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			Per_Roll();
+			Character.Per.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the Wp boxes
+		/// Re-rolls the character's Wp, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Wp_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			Wp_Roll();
+			Character.Wp.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Method triggered by pressing the Re-Roll Button near the Fel boxes
+		/// Re-rolls the character's Fel, disables the Re-roll buttons
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Fel_Reroll_Button_Click(object sender, EventArgs e)
 		{
-			Fel_Roll();
+			Character.Fel.Roll=Dice.Next(1, 11) + Dice.Next(1, 11);
 			CharacterUpdate();
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Disables the characteristics re-roll buttons
+		/// </summary>
 		private void Reroll_Disable()
 		{
 			WS_Reroll_Button.Enabled = false;
@@ -1192,6 +1379,9 @@ namespace Dark_Heresy_Generator
 			Wp_Reroll_Button.Enabled = false;
 			Fel_Reroll_Button.Enabled = false;
 		}
+		/// <summary>
+		/// Enables the characteristics re-roll buttons
+		/// </summary>
 		private void Reroll_Enable()
 		{
 			WS_Reroll_Button.Enabled = true;
@@ -1204,15 +1394,36 @@ namespace Dark_Heresy_Generator
 			Wp_Reroll_Button.Enabled = true;
 			Fel_Reroll_Button.Enabled = true;
 		}
+		/// <summary>
+		/// Method triggered by pressing the apply Button by the divination box
+		/// performs whatever the DivDel delegate was set to by Divination_Roll method
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
 		private void Divination_Button_Click(object sender, EventArgs e)
 		{
 			DivDel();
 			DivDel = delegate() { };
 			CharacterUpdate();
 		}
+		/// <summary>
+		/// Method triggered by pressing the undo Button by the divination box
+		/// Calls the DivReset function
+		/// </summary>
+		/// <param name="sender">the object that sent the event</param>
+		/// <param name="e">the event that was sent</param>
+		private void UnDiv_Button_Click(object sender, EventArgs e)
+		{
+			DivReset();
+			CharacterUpdate();
+		}
 		#endregion
 
 		#region Adding Functions
+		/// <summary>
+		/// Adds a skill to the character's skill list
+		/// </summary>
+		/// <param name="skill">the XElement that represents the skill to be added</param>
 		private void Add_Skill(XElement skill)
 		{
 			if (skill.Attributes().Count() > 1)
@@ -1259,6 +1470,10 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// Adds a talent to the character's talent list
+		/// </summary>
+		/// <param name="talent">the XElement that represents the talent to be added</param>
 		private void Add_Talent(XElement talent)
 		{
 			if (talent.Attributes().Count() > 1)
@@ -1305,6 +1520,10 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// Adds a trait to the character's trait list
+		/// </summary>
+		/// <param name="trait">the XElement that represents the trait to be added</param>
 		private void Add_Trait(XElement trait)
 		{
 			switch(trait.Parent.Parent.Name.LocalName)
@@ -1458,6 +1677,10 @@ namespace Dark_Heresy_Generator
 				GuidingHandEmperor();
 			}
 		}
+		/// <summary>
+		/// Adds a piece of equipment to the character's gear list
+		/// </summary>
+		/// <param name="equip">the XElement that represents the equipment to be added</param>
 		private void Add_Gear(XElement equip)
 		{
 			if (equip.Attributes().Count() > 1)
@@ -1501,6 +1724,9 @@ namespace Dark_Heresy_Generator
 		#endregion
 
 		#region Origin Additions
+		/// <summary>
+		/// adds each trait from the character's origin
+		/// </summary>
 		private void Add_Origin_Traits()
 		{
 			XElement origin = GetOrigin();
@@ -1509,6 +1735,9 @@ namespace Dark_Heresy_Generator
 				Add_Trait(trait);
 			}
 		}
+		/// <summary>
+		/// adds each talent from the character's origin
+		/// </summary>
 		private void Add_Origin_Talents()
 		{
 			XElement origin = GetOrigin();
@@ -1517,6 +1746,9 @@ namespace Dark_Heresy_Generator
 				Add_Talent(talent);
 			}
 		}
+		/// <summary>
+		/// adds each skill from the character's origin
+		/// </summary>
 		private void Add_Origin_Skills()
 		{
 			XElement origin = GetOrigin();
@@ -1526,6 +1758,9 @@ namespace Dark_Heresy_Generator
 			}
 		}
 
+		/// <summary>
+		/// adds any insanity from the character's origin
+		/// </summary>
 		private void Add_Origin_Insanity()
 		{
 			XElement origin = GetOrigin();
@@ -1537,6 +1772,9 @@ namespace Dark_Heresy_Generator
 				Insanity_Roll(num,size,Base,Source.Origin);
 			}
 		}
+		/// <summary>
+		/// adds any corruption from the character's origin
+		/// </summary>
 		private void Add_Origin_Corruption()
 		{
 			XElement origin = GetOrigin();
@@ -1559,6 +1797,9 @@ namespace Dark_Heresy_Generator
 			}
 		}
 
+		/// <summary>
+		/// calls the methods to randomly choose appearance
+		/// </summary>
 		private void Add_Appearance()
 		{
 			XElement origin = GetOrigin();
@@ -1571,6 +1812,9 @@ namespace Dark_Heresy_Generator
 
 		}
 		#region Appearance
+		/// <summary>
+		/// 50/50 chance of each sex
+		/// </summary>
 		private void Set_Sex()
 		{
 			int result = Dice.Next(2);
@@ -1583,6 +1827,10 @@ namespace Dark_Heresy_Generator
 				Character.Sex = "Female";
 			}
 		}
+		/// <summary>
+		/// selects build based on sex and origin
+		/// </summary>
+		/// <param name="builds">XML Element containing the possible builds an orgin has</param>
 		private void Set_Build(XElement builds)
 		{
 			int result = Dice.Next(1, 101);
@@ -1604,6 +1852,10 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// selects skin type based on origin
+		/// </summary>
+		/// <param name="skins">XML Element containing possible skin types an origin has</param>
 		private void Set_Skin(XElement skins)
 		{
 			int result = Dice.Next(1, 101);
@@ -1617,6 +1869,10 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// selects an age range based on origin
+		/// </summary>
+		/// <param name="ages">XML Element containing age ranges that an origin has</param>
 		private void Set_Age(XElement ages)
 		{
 			int result = Dice.Next(1, 101);
@@ -1631,6 +1887,10 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// selects hair type based on origin
+		/// </summary>
+		/// <param name="hairs">XML Element that contains the hair types an origin has</param>
 		private void Set_Hair(XElement hairs)
 		{
 			int result = Dice.Next(1, 101);
@@ -1644,6 +1904,10 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// selects eye type based on origin
+		/// </summary>
+		/// <param name="eyes">XML Element containing the eye types an origin has</param>
 		private void Set_Eye(XElement eyes)
 		{
 			int result = Dice.Next(1, 101);
@@ -1657,6 +1921,10 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// selects a quirk based on origin
+		/// </summary>
+		/// <param name="quirks">XML Element containing the quirks an origin can have</param>
 		private void Set_Quirk(XElement quirks)
 		{
 			int result = Dice.Next(1, 101);
@@ -1674,6 +1942,9 @@ namespace Dark_Heresy_Generator
 		#endregion
 
 		#region Career Additions
+		/// <summary>
+		/// adds each skill from a character's career 
+		/// </summary>
 		private void Add_Career_Skills()
 		{
 			XElement career = GetCareer();
@@ -1682,6 +1953,9 @@ namespace Dark_Heresy_Generator
 				Add_Skill(skill);			
 			}
 		}
+		/// <summary>
+		/// adds each talent from a character's career 
+		/// </summary>
 		private void Add_Career_Talents()
 		{
 			XElement career = GetCareer();
@@ -1690,6 +1964,9 @@ namespace Dark_Heresy_Generator
 				Add_Talent(talent);
 			}
 		}
+		/// <summary>
+		/// adds each trait from a character's career 
+		/// </summary>
 		private void Add_Career_Traits()
 		{
 			XElement career = GetCareer();
@@ -1698,6 +1975,9 @@ namespace Dark_Heresy_Generator
 				Add_Trait(trait);
 			}
 		}
+		/// <summary>
+		/// adds each piece of gear from a character's career 
+		/// </summary>
 		private void Add_Career_Gear()
 		{
 			XElement career = GetCareer();
@@ -1707,6 +1987,9 @@ namespace Dark_Heresy_Generator
 			}
 		}
 
+		/// <summary>
+		/// adds any insanity a career has
+		/// </summary>
 		private void Add_Career_Insanity()
 		{
 			XElement career = GetCareer();
@@ -1718,6 +2001,9 @@ namespace Dark_Heresy_Generator
 				Insanity_Roll(num, size, Base, Source.Career);
 			}
 		}
+		/// <summary>
+		/// adds any corruption a career has
+		/// </summary>
 		private void Add_Career_Corruption()
 		{
 			XElement career = GetCareer();
@@ -1740,6 +2026,10 @@ namespace Dark_Heresy_Generator
 			}
 		}
 
+		/// <summary>
+		/// sets the character's starting wealth and income, 
+		/// based on career with any origin modifications
+		/// </summary>
 		private void Add_Wealth()
 		{
 			XElement career = GetCareer();
@@ -1789,6 +2079,9 @@ namespace Dark_Heresy_Generator
 		#endregion
 
 		#region Background Additions
+		/// <summary>
+		/// modifies any stats based selected background 
+		/// </summary>
 		private void Add_Back_Stats()
 		{
 			XElement back = GetBackground();
@@ -1850,6 +2143,9 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// adds each skill from a character's background 
+		/// </summary>
 		private void Add_Back_Skills()
 		{
 			XElement back = GetBackground();
@@ -1858,6 +2154,9 @@ namespace Dark_Heresy_Generator
 				Add_Skill(skill);
 			}
 		}
+		/// <summary>
+		/// adds each talent from a character's background 
+		/// </summary>
 		private void Add_Back_Talents()
 		{
 			XElement back = GetBackground();
@@ -1866,6 +2165,9 @@ namespace Dark_Heresy_Generator
 				Add_Talent(talent);
 			}
 		}
+		/// <summary>
+		/// adds each trait from a character's background 
+		/// </summary>
 		private void Add_Back_Traits()
 		{
 			XElement back = GetBackground();
@@ -1874,6 +2176,9 @@ namespace Dark_Heresy_Generator
 				Add_Trait(trait);
 			}
 		}
+		/// <summary>
+		/// replaces the character's gear with gear from a character's background 
+		/// </summary>
 		private void Add_Back_Gear()
 		{
 			XElement back = GetBackground();
@@ -1886,6 +2191,9 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// Modifies the character's starting wealth and/or income based on the character's background
+		/// </summary>
 		private void Add_Back_Wealth()
 		{
 			XElement back = GetBackground();
@@ -1925,6 +2233,9 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// modifies the character's fate points based on the character's background
+		/// </summary>
 		private void Add_Back_Fate()
 		{
 			XElement back = GetBackground();
@@ -1941,6 +2252,9 @@ namespace Dark_Heresy_Generator
 				}
 			}
 		}
+		/// <summary>
+		/// modifies the character's insanity based on the character's background
+		/// </summary>
 		private void Add_Back_Insanity()
 		{
 			XElement back = GetBackground();
@@ -1952,6 +2266,9 @@ namespace Dark_Heresy_Generator
 				Insanity_Roll(num, size, Base, Source.Background);
 			}
 		}
+		/// <summary>
+		/// modifies the character's corruption based on the character's background
+		/// </summary>
 		private void Add_Back_Corruption()
 		{
 			XElement back = GetBackground();
@@ -1976,6 +2293,10 @@ namespace Dark_Heresy_Generator
 		#endregion
 
 		#region Special Case Functions
+		/// <summary>
+		/// the Fit for the Purpose trait modifies a stat based on the character's career
+		/// </summary>
+		/// <param name="career">XML Element representing a character's career</param>
 		private void FitForThePurpose(XElement career)
 		{
 			switch (career.Attribute("base").Value)
@@ -2006,6 +2327,10 @@ namespace Dark_Heresy_Generator
 					break;
 			}
 		}
+		/// <summary>
+		/// selects a random sanctioning side effect for the Sanctioned Psyker trait
+		/// </summary>
+		/// <returns>the description of the side effect</returns>
 		private string SanctioningSideEffects()
 		{
 			int result = Dice.Next(1,101);
@@ -2096,6 +2421,12 @@ namespace Dark_Heresy_Generator
 					"unconscious. Increase your Willpower by 3.";
 			}
 		}
+		/// <summary>
+		/// add a minor mutation to the character based on result
+		/// </summary>
+		/// <param name="result">An int between 1-100 that represents the mutation selected</param>
+		/// <param name="source">The source(Origin, Career, Background, or Divination) \
+		/// that caused the mutation</param>
 		private void MinorMutation(int result, Source source)
 		{
 			if (result >= 1 && result <= 20)
@@ -2277,6 +2608,12 @@ namespace Dark_Heresy_Generator
 			}
 			CharacterUpdate();
 		}
+		/// <summary>
+		/// add a major mutation to the character based on result
+		/// </summary>
+		/// <param name="result">An int between 1-100 that represents the mutation selected</param>
+		/// <param name="source">The source(Origin, Career, Background, or Divination) \
+		/// that caused the mutation</param>
 		private void MajorMutation(int result, Source source)
 		{
 			if (result >= 1 && result <= 25)
@@ -2582,6 +2919,10 @@ namespace Dark_Heresy_Generator
 			}
 			CharacterUpdate();
 		}
+		/// <summary>
+		/// selects a mutant specific name
+		/// </summary>
+		/// <returns>The name</returns>
 		private string MutantName()
 		{
 			List<string> namelist = new List<string>();
@@ -2623,6 +2964,11 @@ namespace Dark_Heresy_Generator
 			string insertname = Iname.Elements().ElementAt(Dice.Next(Iname.Elements().Count())).Value;
 			return selectedname.Replace("X", insertname);
 		}
+		/// <summary>
+		/// selects a random malignancy
+		/// </summary>
+		/// <param name="source">The source(Origin, Career, Background, Divination)
+		/// of the malignancy</param>
 		private void Malignancy(Source source)
 		{
 			int result = Dice.Next(1,101);
@@ -2848,6 +3194,9 @@ namespace Dark_Heresy_Generator
 				
 			}
 		}
+		/// <summary>
+		/// Applies a random effect to the character based on the Mysterious Lineage table
+		/// </summary>
 		private void MysteriousLineage()
 		{
 			int result=0;
@@ -2904,6 +3253,9 @@ namespace Dark_Heresy_Generator
 					break;
 			}
 		}
+		/// <summary>
+		/// Adds what the user chooses to the character, based on the Cold Trader background option
+		/// </summary>
 		private void ColdTraderChoice()
 		{
 			List<string> ChoiceList = new List<string>();
@@ -2936,6 +3288,9 @@ namespace Dark_Heresy_Generator
 					break;
 			}
 		}
+		/// <summary>
+		/// Adds what the user chooses to the character, based on the Hive Gang Member background option
+		/// </summary>
 		private void HiveGangChoice()
 		{
 			List<string> list = new List<string>();
@@ -2971,6 +3326,9 @@ namespace Dark_Heresy_Generator
 
 			Character.Skills.Add(new Skill(ChoiceDialog1.selection, Source.Background));
 		}
+		/// <summary>
+		/// Applies a random effect to the character based on the Guiding Hand of the Emperor table
+		/// </summary>
 		private void GuidingHandEmperor()
 		{
 			int result=0;
@@ -3030,6 +3388,9 @@ namespace Dark_Heresy_Generator
 		}
 		#endregion
 
+		/// <summary>
+		/// Updates the UI to reflect the current state of the character
+		/// </summary>
 		private void CharacterUpdate()
 		{
 			#region Base Boxes
@@ -3125,6 +3486,10 @@ namespace Dark_Heresy_Generator
 
 		}
 
+		#region reset functions
+		/// <summary>
+		/// Resets all the character's properites and updates the UI
+		/// </summary>
 		private void Reset()
 		{
 			Character.Reset();
@@ -3144,6 +3509,9 @@ namespace Dark_Heresy_Generator
 			Roll_button.Enabled = false;
 			Reroll_Disable();
 		}
+		/// <summary>
+		/// Resets on the Properties altered by a background
+		/// </summary>
 		private void BackReset()
 		{
 			Character.Background.Reset();
@@ -3216,6 +3584,9 @@ namespace Dark_Heresy_Generator
 
 			Add_Wealth();
 		}
+		/// <summary>
+		/// Resets on the Properties altered by a Career
+		/// </summary>
 		private void CareerReset()
 		{
 			if (Character.Background.Name != "")
@@ -3283,6 +3654,9 @@ namespace Dark_Heresy_Generator
 			#endregion
 			#endregion
 		}
+		/// <summary>
+		/// Resets on the Properties altered by a Divination
+		/// </summary>
 		private void DivReset()
 		{
 			#region Base Stats
@@ -3345,11 +3719,6 @@ namespace Dark_Heresy_Generator
 			#endregion
 			#endregion
 		}
-
-		private void UnDiv_Button_Click(object sender, EventArgs e)
-		{
-			DivReset();
-			CharacterUpdate();
-		}
+		#endregion
 	}
 }
